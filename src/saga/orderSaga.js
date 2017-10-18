@@ -7,13 +7,14 @@ import {
     lastEventUpdate
 } from '../action'
 const axios = require('axios')
+const botLoggerHostName = 'http://localhost:8080' // 'https://botloggerk.azurewebsites.net'
 
 function* pollForOrderUpdates() {
 
     try {
         const lastOrderResponse = yield call(
             axios.get,
-            'https://botloggerk.azurewebsites.net/order/last',
+            botLoggerHostName+'/order/last',
             {params: {}}
         )
         console.log(lastOrderResponse)
@@ -26,7 +27,7 @@ function* pollForOrderUpdates() {
     try {
         const ordersResponse = yield call(
             axios.get,
-            'https://botloggerk.azurewebsites.net/orders',
+            botLoggerHostName+'/orders',
             {params: {}}
         )
         console.log(ordersResponse)
@@ -41,7 +42,7 @@ function* orderSagaInit(){
     //begin polling
     while(true){
         yield call(pollForOrderUpdates)
-        yield call(delay, 1000)
+        yield call(delay, 10000)
     }
 
 }

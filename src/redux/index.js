@@ -1,12 +1,13 @@
 import {combineReducers} from 'redux'
 import order, {orderInitialState} from './order'
+import settings, {settingsInitialState} from "./settings";
 
-const allReducers = combineReducers({
-    order
+export default combineReducers({
+    order,
+    settings
 })
 
-export default allReducers
-
 export const initialState={
-    order: orderInitialState
+    order: orderInitialState,
+    settings: settingsInitialState
 }

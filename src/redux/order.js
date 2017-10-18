@@ -3,7 +3,6 @@ import {
     ORDER_RESET,
     ORDER_COMPLETED_ORDERS_UPDATE
 } from '../action'
-import {initialState} from "./index";
 
 export const orderInitialState = {
     lastEvent:{},
@@ -29,8 +28,8 @@ const order = (state = orderInitialState, action) => {
         case ORDER_RESET:
             return {
                 ...state,
-                lastEvent: initialState.lastEvent,
-                completedOrders: initialState.data
+                lastEvent: orderInitialState.lastEvent,
+                completedOrders: orderInitialState.data
             }
         default:
             return state
