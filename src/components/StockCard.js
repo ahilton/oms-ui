@@ -13,24 +13,30 @@ export default class StockCard extends Component {
             }
         }
         const contentComponent = content?
-            <Box w={1} p={40} style={{textAlign:'center'}}>
+            <Box w={1} style={{textAlign:'center', paddingTop:40, paddingBottom:40}}>
                 {content}
             </Box>:
-            <Box w={1} p={40} style={{textAlign:'center'}}>
-                <div style={{textAlign:'left', display:'inline-block', fontSize:40, marginRight:20}}>
-                    {order && order.completed && <Icon className="pt-intent-success" iconName="tick-circle" iconSize="inherit"/>}
-                </div>
-
-                <div style={{textAlign:'left', display:'inline-block'}}>
+            <Box w={1} style={{textAlign:'center', paddingTop:40, paddingBottom:40}}>
+                <div>
+                    {order && order.direction &&
+                        <div style={{
+                            fontSize: 40,
+                            fontVariant: 'small-caps',
+                            backgroundColor: colorFg,
+                            color: 'white',
+                            padding: 5,
+                            paddingBottom: 10,
+                            width: 200,
+                            borderRadius: 35,
+                            margin: '0 auto 0 auto',
+                            marginBottom: '10'
+                        }}>
+                            {order.direction.toLowerCase()}
+                        </div>
+                    }
                     <div style={{
-                        fontSize:40,
-                        fontVariant: 'small-caps',
-                        color:colorFg
-                    }}>{order && order.direction && order.direction.toLowerCase()}</div>
-                    <div style={{
-                        fontSize:70,
+                        fontSize:60,
                     }}>
-
                         {order && order.qty && order.qty.toLocaleString()}</div>
                 </div>
             </Box>
@@ -39,7 +45,13 @@ export default class StockCard extends Component {
             <div className="pt-card pt-elevation-4" style={containerStyle}>
                 <Flex wrap align='left' w={1} p={0}>
                     <Box  w={1/3} p={1}>
-                        {stockDetails.logo && <img src={stockDetails.logo.url} width={stockDetails.logo.width}/>}
+                        <div style={{textAlign:'center', position:'absolute', display:'inline-block', fontSize:40, marginRight:20}}>
+                            {(order && order.completed)?
+                                (<Icon className="pt-intent-success" iconName="tick-circle" iconSize="inherit"/>)
+                            :
+                                (stockDetails.logo && <img src={stockDetails.logo.url} width={stockDetails.logo.width}/>)
+                            }
+                        </div>
                     </Box>
                     <Box justify='end' w={2/3} p={0} style={{textAlign:'right'}}>
                         <div className="" style={{

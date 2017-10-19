@@ -79,13 +79,13 @@ class App extends Component {
                 }
             }
             if (order.direction){
-                switch(order.direction) {
-                    case 'Sell':
+                switch(order.direction.toLowerCase()) {
+                    case 'sell':
                         return {
                             bg:Colors.RED3,
                             fg:Colors.RED1
                         }
-                    case 'Buy':
+                    case 'buy':
                         return {
                             bg:Colors.GREEN3,
                             fg:Colors.GREEN1
@@ -148,16 +148,6 @@ class App extends Component {
             }}>
                 {stockComponent}
             </Flex>
-
-        // <div style={{
-        //     height:700,
-        //     backgroundColor:Colors.LIGHT_GRAY1,
-        //     display:'flex',
-        //     alignItems:'center', // vertical
-        //     justifyContent: 'center', //horizontal
-        // }}>
-        //     {stockComponent}
-        // </div>
     }
 
     render() {
