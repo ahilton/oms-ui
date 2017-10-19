@@ -130,11 +130,11 @@ class App extends Component {
         </div>
     }
 
-    handleStockSelect = (stock, channel) => {
-        this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[channel]))
+    handleStockSelect = (stock, channel, conversationId) => {
+        this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[channel], conversationId))
     }
 
-    renderStockSelection = (pushEvents, channel) => {
+    renderStockSelection = (pushEvents, lastEvent) => {
 
         const stockComponent = Object.keys(this.stockDetails).map(
             (key) => {
@@ -157,7 +157,7 @@ class App extends Component {
                 </span>
                 }
                 if (pushEvents){
-                    cardProps['handleClick']=()=>this.handleStockSelect(key, channel)
+                    cardProps['handleClick']=()=>this.handleStockSelect(key, lastEvent.channel, lastEvent.conversationId)
                 }
                 return <StockCard {...cardProps}/>
             }
@@ -241,7 +241,7 @@ class App extends Component {
 
         const orderComponent = (order && order.stock)?
             this.renderOrderComponent(order):
-            this.renderStockSelection(pushEvents, lastEvent.channel)
+            this.renderStockSelection(pushEvents, lastEvent)
 
         return (
             <div style={{

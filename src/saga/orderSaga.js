@@ -9,6 +9,7 @@ import {
 import {PUSH_CHANNEL_EVENT} from "../action/index";
 const axios = require('axios')
 const botLoggerHostName =  'https://omslogger.azurewebsites.net' //'http://localhost:8080'
+const nexusHostName = 'http://localhost:8080'
 
 function* pollForOrderUpdates() {
 
@@ -51,7 +52,23 @@ function* orderSagaInit(){
 }
 
 function* pushChannelEvent(action){
-    const {message, key} = action
+    const {message, key, conversationId} = action
+    try {
+        const pushResponse = yield call(
+            axios.put,
+            nexusHostName+'/event/push',
+            {
+                message:message,
+                channelKey:key,
+                conversationId:conversationId
+            }
+        )
+        console.log(pushResponse)
+    }
+    catch(error){
+        console.log(error)
+        //TODO:: error handling
+    }
 }
 
 function* orderSagaRoot() {

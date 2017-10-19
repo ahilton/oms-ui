@@ -24,10 +24,11 @@ export const reset = () => {return {type:ORDER_RESET}}
 
 export const webChatToggle = () => {return {type:WEB_CHAT_TOGGLE}}
 
-export const pushChannelEvent = (message, key) => {
+export const pushChannelEvent = (message, key, conversationId) => {
     return {
         type:PUSH_CHANNEL_EVENT,
         message:message,
-        key: key
+        key: key,
+        conversationId: conversationId
     }
 }
