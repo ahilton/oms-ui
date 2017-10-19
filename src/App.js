@@ -194,7 +194,7 @@ class App extends Component {
                         fontSize: 30
                     }}
                     >
-                        {this.renderToggle({marginRight:25, color:Colors.TURQUOISE5})}
+                        {this.renderToggle({marginRight:25, color:Colors.BLUE5})}
                         {lastEvent.lastSystemMessage}
                     </div>
                 </div>
