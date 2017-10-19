@@ -10,9 +10,20 @@ import {
     getCompletedOrders,
     getLastEvent
 } from './redux/order'
+
+import {
+    webChatEnabled
+} from "./redux/settings"
+
+import {
+    webChatToggle
+} from "./action"
+
 import { Colors, Icon } from "@blueprintjs/core";
 import {Box, Flex} from "reflexbox";
+
 import StockCard from "./components/StockCard";
+
 
 class App extends Component {
 
@@ -124,7 +135,7 @@ class App extends Component {
                 stockDetails:this.stockDetails[key],
                 containerStyle:{
                     width:350,
-                    height:300,
+                    height:250,
                     marginRight:20,
                     marginLeft:20
                 },
@@ -150,8 +161,68 @@ class App extends Component {
             </Flex>
     }
 
+    renderToggle = (style) => {
+        return (
+            <a role="button" className=""  style={style} tabindex="0">
+                <Icon iconName="chat" iconSize="inherit" onClick={this.toggleWebChat} style={{fontSize:60}}/>
+            </a>
+        )
+    }
+
+    renderFooter = (lastEvent) => {
+        return (
+            <div>
+                {/*USE A PHANTOM BLOCK TO PREVENT THE FOOTER AFFECTING PAGE FLOW*/}
+                <div style={{
+                    display:'block',
+                    height:180,
+                    width:'100%'
+                }}/>
+                {/*FIXED FOOTER*/}
+                <div style={{
+                    height:180,
+                    position:'fixed', left:0, bottom:0,
+                    width:'100%',
+                    backgroundColor:Colors.BLUE1,
+                    display:'flex',
+                    alignItems:'center', // vertical
+                    justifyContent: 'center', //horizontal
+                }}>
+                    <div style={{
+                        color:Colors.LIGHT_GRAY4,
+                        fontWeight: 500,
+                        fontSize: 30
+                    }}
+                    >
+                        {this.renderToggle({marginRight:25, color:Colors.TURQUOISE5})}
+                        {lastEvent.lastSystemMessage}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    renderWebchat = () => {
+        return (
+            <div style={{
+                display:'flex',
+                height:'100%',
+                width:400
+            }}>
+                <iframe
+                    style={{height:'100%', width:400}}
+                    src='https://webchat.botframework.com/embed/VenusBot?s=YoU7MvKr_Yk.cwA.VlQ.cQGefYItjezJ9wS5zTpu6MSM9j3ZWdu9HJ0EgGeMQaU'>
+                </iframe>
+            </div>
+        )
+    }
+
+    toggleWebChat = () => {
+        this.props.dispatch(webChatToggle())
+    }
+
     render() {
-        const {lastEvent, completedOrders} = this.props
+        const {lastEvent, completedOrders, webChatEnabled} = this.props
         const order = lastEvent?lastEvent.lastOrderState:{}
 
         const orderComponent = (order && order.stock)?
@@ -159,42 +230,31 @@ class App extends Component {
             this.renderStockSelection()
 
         return (
-            <div className="App"  style={{
+            <div style={{
                 display:'flex',
-                flexDirection:'column',
+                flexDirection:'row',
                 height:'100%'
             }}>
-                {orderComponent}
-                <div>
-                    {/*USE A PHANTOM BLOCK TO PREVENT THE FOOTER AFFECTING PAGE FLOW*/}
-                    <div style={{
-                        display:'block',
-                        height:180,
-                        width:'100%'
-                    }}/>
-                    {/*FIXED FOOTER*/}
-                    <div style={{
-                        height:180,
+                <div className="App"  style={{
+                    display:'flex',
+                    flexDirection:'column',
+                    height:'100%',
+                    flex:1
+                }}>
+                    {orderComponent}
+                    {!webChatEnabled && this.renderFooter(lastEvent)}
+                    {webChatEnabled && <div style={{
+                        width:120,
+                        height:120,
                         position:'fixed', left:0, bottom:0,
-                        width:'100%',
-                        backgroundColor:Colors.BLUE1,
                         display:'flex',
                         alignItems:'center', // vertical
-                        justifyContent: 'center', //horizontal
+                        justifyContent: 'center', //horizontal,
                     }}>
-                        <h1 style={{
-                            color:Colors.LIGHT_GRAY4,
-                        }}
-                        >
-                            <Icon iconName="chat" iconSize="inherit" style={{
-                                marginRight:25,
-                                color:Colors.BLUE5,
-                                fontSize:60
-                            }}/>
-                            {lastEvent.lastSystemMessage}
-                        </h1>
-                    </div>
+                        {this.renderToggle({color:Colors.BLUE1})}
+                    </div>}
                 </div>
+                {webChatEnabled && this.renderWebchat()}
             </div>
         );
     }
@@ -204,7 +264,8 @@ class App extends Component {
 function mapStateToProps(state) {
     return {
         completedOrders: getCompletedOrders(state),
-        lastEvent: getLastEvent(state)
+        lastEvent: getLastEvent(state),
+        webChatEnabled: webChatEnabled(state)
     }
 }
 
