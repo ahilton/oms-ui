@@ -4,6 +4,8 @@ export const ORDER_COMPLETED_ORDERS_UPDATE = 'ORDER_COMPLETED_ORDERS_UPDATE'
 
 export const WEB_CHAT_TOGGLE = 'WEB_CHAT_TOGGLE'
 
+export const PUSH_CHANNEL_EVENT = 'PUSH_CHANNEL_EVENT'
+
 export const lastEventUpdate = (lastEvent) => {
     return {
         type:ORDER_LAST_EVENT_UPDATE,
@@ -21,3 +23,11 @@ export const completedOrdersUpdate = (completedOrders) => {
 export const reset = () => {return {type:ORDER_RESET}}
 
 export const webChatToggle = () => {return {type:WEB_CHAT_TOGGLE}}
+
+export const pushChannelEvent = (message, key) => {
+    return {
+        type:PUSH_CHANNEL_EVENT,
+        message:message,
+        key: key
+    }
+}

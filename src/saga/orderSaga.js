@@ -6,6 +6,7 @@ import {
     completedOrdersUpdate,
     lastEventUpdate
 } from '../action'
+import {PUSH_CHANNEL_EVENT} from "../action/index";
 const axios = require('axios')
 const botLoggerHostName =  'https://omslogger.azurewebsites.net' //'http://localhost:8080'
 
@@ -17,10 +18,11 @@ function* pollForOrderUpdates() {
             botLoggerHostName+'/order/last',
             {params: {}}
         )
-        console.log(lastOrderResponse)
+        //console.log(lastOrderResponse)
         yield put(lastEventUpdate(lastOrderResponse.data))
     }
     catch(error){
+        console.log(error)
         //TODO:: error handling
     }
 
@@ -30,10 +32,11 @@ function* pollForOrderUpdates() {
             botLoggerHostName+'/orders',
             {params: {}}
         )
-        console.log(ordersResponse)
+        //console.log(ordersResponse)
         yield put(completedOrdersUpdate(ordersResponse.data))
     }
     catch(error){
+        console.log(error)
         //TODO:: error handling
     }
 }
@@ -47,8 +50,13 @@ function* orderSagaInit(){
 
 }
 
+function* pushChannelEvent(action){
+    const {message, key} = action
+}
+
 function* orderSagaRoot() {
     yield takeLatest('persist/REHYDRATE', orderSagaInit)
+    yield takeEvery(PUSH_CHANNEL_EVENT, pushChannelEvent)
 }
 
 export default orderSagaRoot

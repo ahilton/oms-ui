@@ -12,11 +12,13 @@ import {
 } from './redux/order'
 
 import {
-    webChatEnabled
+    webChatEnabled,
+    channelKeys
 } from "./redux/settings"
 
 import {
-    webChatToggle
+    webChatToggle,
+    pushChannelEvent
 } from "./action"
 
 import { Colors, Icon } from "@blueprintjs/core";
@@ -128,27 +130,37 @@ class App extends Component {
         </div>
     }
 
-    renderStockSelection = (order) => {
+    handleStockSelect = (stock, channel) => {
+        this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[channel]))
+    }
+
+    renderStockSelection = (pushEvents, channel) => {
 
         const stockComponent = Object.keys(this.stockDetails).map(
-            (key) => <StockCard {...{
-                stockDetails:this.stockDetails[key],
-                containerStyle:{
-                    width:350,
-                    height:250,
-                    marginRight:20,
-                    marginLeft:20
-                },
-                order:{},
-                colorFg: Colors.BLUE3,
-                key: key+"_stockSelection",
-                content: <span style={{
-                    fontSize:60,
-                    color:Colors.BLUE2
-                }}>
+            (key) => {
+                var cardProps = {
+                    stockDetails:this.stockDetails[key],
+                    containerStyle:{
+                        width:350,
+                        height:250,
+                        marginRight:20,
+                        marginLeft:20
+                    },
+                    order:{},
+                    colorFg: Colors.BLUE3,
+                    key: key+"_stockSelection",
+                    content: <span style={{
+                        fontSize:60,
+                        color:Colors.BLUE2
+                    }}>
                     {key}
                 </span>
-            }}/>
+                }
+                if (pushEvents){
+                    cardProps['handleClick']=()=>this.handleStockSelect(key, channel)
+                }
+                return <StockCard {...cardProps}/>
+            }
         )
         return <Flex wrap style={{
                 height:'100%',
@@ -163,7 +175,7 @@ class App extends Component {
 
     renderToggle = (style) => {
         return (
-            <a role="button" className=""  style={style} tabindex="0">
+            <a role="button" className=""  style={style} tabIndex="0">
                 <Icon iconName="chat" iconSize="inherit" onClick={this.toggleWebChat} style={{fontSize:60}}/>
             </a>
         )
@@ -175,12 +187,12 @@ class App extends Component {
                 {/*USE A PHANTOM BLOCK TO PREVENT THE FOOTER AFFECTING PAGE FLOW*/}
                 <div style={{
                     display:'block',
-                    height:180,
+                    height:150,
                     width:'100%'
                 }}/>
                 {/*FIXED FOOTER*/}
                 <div style={{
-                    height:180,
+                    height:150,
                     position:'fixed', left:0, bottom:0,
                     width:'100%',
                     backgroundColor:Colors.BLUE1,
@@ -211,7 +223,7 @@ class App extends Component {
             }}>
                 <iframe
                     style={{height:'100%', width:400}}
-                    src='https://webchat.botframework.com/embed/VenusBot?s=YoU7MvKr_Yk.cwA.VlQ.cQGefYItjezJ9wS5zTpu6MSM9j3ZWdu9HJ0EgGeMQaU'>
+                    src={'https://webchat.botframework.com/embed/VenusBot?s='+this.props.channelKeys.webchat}>
                 </iframe>
             </div>
         )
@@ -225,9 +237,11 @@ class App extends Component {
         const {lastEvent, completedOrders, webChatEnabled} = this.props
         const order = lastEvent?lastEvent.lastOrderState:{}
 
+        const pushEvents = lastEvent&&lastEvent.channel==='webchat'
+
         const orderComponent = (order && order.stock)?
             this.renderOrderComponent(order):
-            this.renderStockSelection()
+            this.renderStockSelection(pushEvents, lastEvent.channel)
 
         return (
             <div style={{
@@ -244,8 +258,7 @@ class App extends Component {
                     {orderComponent}
                     {!webChatEnabled && this.renderFooter(lastEvent)}
                     {webChatEnabled && <div style={{
-                        width:120,
-                        height:120,
+                        width:120, height:120,
                         position:'fixed', left:0, bottom:0,
                         display:'flex',
                         alignItems:'center', // vertical
@@ -265,7 +278,8 @@ function mapStateToProps(state) {
     return {
         completedOrders: getCompletedOrders(state),
         lastEvent: getLastEvent(state),
-        webChatEnabled: webChatEnabled(state)
+        webChatEnabled: webChatEnabled(state),
+        channelKeys: channelKeys(state)
     }
 }
 

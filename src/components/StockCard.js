@@ -6,12 +6,14 @@ import {Box, Flex} from "reflexbox";
 export default class StockCard extends Component {
 
     render() {
-        var {stockDetails, order, colorFg, content, containerStyle} = this.props
+        var {stockDetails, order, colorFg, content, containerStyle, handleClick} = this.props
         if (!containerStyle){
             containerStyle = {
                 width:400
             }
         }
+        const cardClassName = handleClick?'pt-elevation-1 pt-interactive':'pt-elevation-4'
+        const cardProps = handleClick?{onClick:handleClick}:{}
         const contentComponent = content?
             <Box w={1} style={{textAlign:'center', paddingTop:40, paddingBottom:40}}>
                 {content}
@@ -42,7 +44,7 @@ export default class StockCard extends Component {
             </Box>
 
         return (
-            <div className="pt-card pt-elevation-4" style={containerStyle}>
+            <div className={'pt-card '+ cardClassName} style={containerStyle} {...cardProps}>
                 <Flex wrap align='left' w={1} p={0}>
                     <Box  w={1/3} p={1}>
                         <div style={{textAlign:'center', position:'absolute', display:'inline-block', fontSize:40, marginRight:20}}>
