@@ -169,17 +169,15 @@ class App extends Component {
                     {/*USE A PHANTOM BLOCK TO PREVENT THE FOOTER AFFECTING PAGE FLOW*/}
                     <div style={{
                         display:'block',
-                        height:200,
+                        height:180,
                         width:'100%'
                     }}/>
                     {/*FIXED FOOTER*/}
                     <div style={{
-                        height:200,
-                        position:'fixed',
-                        left:0,
-                        bottom:0,
+                        height:180,
+                        position:'fixed', left:0, bottom:0,
                         width:'100%',
-                        backgroundColor:Colors.DARK_GRAY4,
+                        backgroundColor:Colors.BLUE1,
                         display:'flex',
                         alignItems:'center', // vertical
                         justifyContent: 'center', //horizontal
@@ -190,7 +188,7 @@ class App extends Component {
                         >
                             <Icon iconName="chat" iconSize="inherit" style={{
                                 marginRight:25,
-                                color:Colors.BLUE4,
+                                color:Colors.BLUE5,
                                 fontSize:60
                             }}/>
                             {lastEvent.lastSystemMessage}
