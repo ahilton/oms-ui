@@ -12,6 +12,7 @@ import {
 } from './redux/order'
 import { Colors, Icon } from "@blueprintjs/core";
 import {Box, Flex} from "reflexbox";
+import StockCard from "./components/StockCard";
 
 class App extends Component {
 
@@ -95,67 +96,83 @@ class App extends Component {
         return defaultColors
     }
 
+    renderOrderComponent = (order) => {
+        const stockDetails = order&&order.stock?this.getDetailsForStock(order.stock):{
+            code: '',
+            name: ''
+        }
+        const colorChart = this.getColorChart(order)
+        return <div style={{
+            height:800,
+            backgroundColor:colorChart.bg,
+            display:'flex',
+            alignItems:'center', // vertical
+            justifyContent: 'center', //horizontal
+        }}>
+            <StockCard {...{
+                stockDetails:stockDetails,
+                order:order,
+                colorFg: colorChart.fg
+            }}/>
+        </div>
+    }
+
+    renderStockSelection = (order) => {
+
+        const stockComponent = Object.keys(this.stockDetails).map(
+            (key) => <StockCard {...{
+                stockDetails:this.stockDetails[key],
+                containerStyle:{
+                    width:350,
+                    height:300,
+                    marginRight:20,
+                    marginLeft:20
+                },
+                order:{},
+                colorFg: Colors.BLUE3,
+                key: key+"_stockSelection",
+                content: <span style={{
+                    fontSize:60,
+                    color:Colors.BLUE2
+                }}>
+                    {key}
+                </span>
+            }}/>
+        )
+        return <Flex wrap style={{
+                height:800,
+                backgroundColor:Colors.LIGHT_GRAY1,
+                display:'flex',
+                alignItems:'center', // vertical
+                justifyContent: 'center', //horizontal
+            }}>
+                {stockComponent}
+            </Flex>
+
+        // <div style={{
+        //     height:700,
+        //     backgroundColor:Colors.LIGHT_GRAY1,
+        //     display:'flex',
+        //     alignItems:'center', // vertical
+        //     justifyContent: 'center', //horizontal
+        // }}>
+        //     {stockComponent}
+        // </div>
+    }
+
     render() {
         const {lastEvent, completedOrders} = this.props
         const order = lastEvent?lastEvent.lastOrderState:{}
-        console.log(order)
-        const stockDetails = order&&order.stock?this.getDetailsForStock(order.stock):{
-            code: '',
-            name: 'Empty Order Ticket'
-        }
-        const colorChart = this.getColorChart(order)
+
+        const orderComponent = (order && order.stock)?
+            this.renderOrderComponent(order):
+            this.renderStockSelection()
+
         return (
             <div className="App"  style={{
 
             }}>
-
-                <div style={{
-                    height:500,
-                    backgroundColor:colorChart.bg,
-                    display:'flex',
-                    alignItems:'center', // vertical
-                    justifyContent: 'center', //horizontal
-                }}>
-                    <div className="pt-card pt-elevation-4" style={{width:400}}>
-                        <Flex wrap align='left' w={1} p={0}>
-                            <Box  w={1/3} p={1}>
-                                {stockDetails.logo && <img src={stockDetails.logo.url} width={stockDetails.logo.width}/>}
-                            </Box>
-                            <Box justify='end' w={2/3} p={0} style={{textAlign:'right'}}>
-                                <div className="" style={{
-                                    fontSize:50,
-                                    fontFamily:'Arial Black'
-                                }}>
-                                    {stockDetails.code}
-                                </div>
-                                <div className="" style={{
-                                }}>
-                                    {stockDetails.name}
-                                </div>
-                            </Box>
-
-                            <Box w={1} p={40} style={{textAlign:'center'}}>
-                                <div style={{textAlign:'left', display:'inline-block', fontSize:40, marginRight:20}}>
-                                    {order && order.completed && <Icon className="pt-intent-success" iconName="tick-circle" iconSize="inherit"/>}
-                                </div>
-
-                                <div style={{textAlign:'left', display:'inline-block'}}>
-                                    <div style={{
-                                        fontSize:40,
-                                        fontVariant: 'small-caps',
-                                        color:colorChart.fg
-                                    }}>{order && order.direction && order.direction.toLowerCase()}</div>
-                                    <div style={{
-                                        fontSize:70,
-                                    }}>
-
-                                        {order && order.qty && order.qty.toLocaleString()}</div>
-                                </div>
-                            </Box>
-                        </Flex>
-
-                    </div>
-                </div>
+                {orderComponent}
                 <div style={{
                     height:200,
                     backgroundColor:Colors.DARK_GRAY4,
@@ -182,6 +199,7 @@ d
             </div>
         );
     }
+
 }
 
 function mapStateToProps(state) {
