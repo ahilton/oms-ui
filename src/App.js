@@ -83,12 +83,12 @@ class App extends Component {
                     case 'sell':
                         return {
                             bg:Colors.RED3,
-                            fg:Colors.RED1
+                            fg:Colors.RED2
                         }
                     case 'buy':
                         return {
                             bg:Colors.GREEN3,
-                            fg:Colors.GREEN1
+                            fg:Colors.GREEN2
                         }
                 }
             }
@@ -103,9 +103,9 @@ class App extends Component {
         }
         const colorChart = this.getColorChart(order)
         return <div style={{
-            height:800,
             backgroundColor:colorChart.bg,
             display:'flex',
+            flex:1,
             alignItems:'center', // vertical
             justifyContent: 'center', //horizontal
         }}>
@@ -140,9 +140,9 @@ class App extends Component {
             }}/>
         )
         return <Flex wrap style={{
-                height:800,
+                height:'100%',
                 backgroundColor:Colors.LIGHT_GRAY1,
-                display:'flex',
+                flex:1,
                 alignItems:'center', // vertical
                 justifyContent: 'center', //horizontal
             }}>
@@ -160,32 +160,43 @@ class App extends Component {
 
         return (
             <div className="App"  style={{
-
+                display:'flex',
+                flexDirection:'column',
+                height:'100%'
             }}>
                 {orderComponent}
-                <div style={{
-                    height:200,
-                    backgroundColor:Colors.DARK_GRAY4,
-                    display:'flex',
-                    alignItems:'center', // vertical
-                    justifyContent: 'center', //horizontal
-
-                }}>
-                    <h1 style={{
-                        color:Colors.LIGHT_GRAY4
-                    }}
-                    >
-                        <Icon iconName="chat" iconSize="inherit" style={{
-                            marginRight:15,
-                            color:Colors.GRAY4
-                        }}/>
-                        {lastEvent.lastSystemMessage}
-                    </h1>
-                </div>
                 <div>
-d
+                    {/*USE A PHANTOM BLOCK TO PREVENT THE FOOTER AFFECTING PAGE FLOW*/}
+                    <div style={{
+                        display:'block',
+                        height:200,
+                        width:'100%'
+                    }}/>
+                    {/*FIXED FOOTER*/}
+                    <div style={{
+                        height:200,
+                        position:'fixed',
+                        left:0,
+                        bottom:0,
+                        width:'100%',
+                        backgroundColor:Colors.DARK_GRAY4,
+                        display:'flex',
+                        alignItems:'center', // vertical
+                        justifyContent: 'center', //horizontal
+                    }}>
+                        <h1 style={{
+                            color:Colors.LIGHT_GRAY4,
+                        }}
+                        >
+                            <Icon iconName="chat" iconSize="inherit" style={{
+                                marginRight:25,
+                                color:Colors.BLUE4,
+                                fontSize:60
+                            }}/>
+                            {lastEvent.lastSystemMessage}
+                        </h1>
+                    </div>
                 </div>
-
             </div>
         );
     }
