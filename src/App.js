@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import 'normalize.css/normalize.css'
 import '@blueprintjs/core/dist/blueprint.css'
+import 'react-table/react-table.css'
 import './App.css';
 
 import {
@@ -18,6 +19,7 @@ import {
 
 import {
     webChatToggle,
+    blotterToggle,
     pushChannelEvent
 } from "./action"
 
@@ -28,8 +30,8 @@ import StockCard from "./components/StockCard";
 import Footer from "./components/Footer";
 import StockSelection from "./components/StockSelection";
 import ToggleButton from "./components/ToggleButton";
-import {blotterToggle} from "./action/index";
 import FloatingToggleButton from "./components/FloatingToggleButton";
+import Blotter from "./components/Blotter";
 
 
 class App extends Component {
@@ -188,8 +190,15 @@ class App extends Component {
         this.props.dispatch(blotterToggle())
     }
 
+    pageGrowStyle = {
+        display:'flex',
+        flexDirection:'column',
+        height:'100%',
+        flex:1
+    }
+
     render() {
-        const {lastEvent, completedOrders, webChatEnabled} = this.props
+        const {lastEvent, completedOrders, webChatEnabled, blotterEnabled} = this.props
         const order = lastEvent?lastEvent.lastOrderState:{}
 
         const pushEvents = lastEvent&&lastEvent.channel==='webchat'
@@ -204,17 +213,16 @@ class App extends Component {
                 flexDirection:'row',
                 height:'100%'
             }}>
-                <div style={{
-                    display:'flex',
-                    flexDirection:'column',
-                    height:'100%',
-                    flex:1
-                }}>
+                {blotterEnabled && <div style={this.pageGrowStyle}>
+                    <Blotter {...{stockDetails:this.stockDetails, completedOrders}}/>
+                    {this.renderToggleButton({left:0, top:0}, 'cell-tower', this.toggleView)}
+                </div>}
+                {!blotterEnabled && <div style={this.pageGrowStyle}>
                     {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
                     {orderComponent}
                     {!webChatEnabled && this.renderFooter(lastEvent)}
                     {webChatEnabled && this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
-                </div>
+                </div>}
                 {webChatEnabled && this.renderWebchat()}
             </div>
         );
