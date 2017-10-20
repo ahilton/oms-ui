@@ -8,7 +8,8 @@ import {
 } from '../action'
 import {PUSH_CHANNEL_EVENT} from "../action/index";
 const axios = require('axios')
-const botLoggerHostName =  'https://omslogger.azurewebsites.net' //'http://localhost:8080'
+const botLoggerHostName = 'https://omslogger.azurewebsites.net'
+// const botLoggerHostName = 'http://localhost:8080'
 const nexusHostName = 'http://localhost:8080'
 
 function* pollForOrderUpdates() {

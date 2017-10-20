@@ -13,7 +13,7 @@ import {
 
 import {
     webChatEnabled,
-    channelKeys
+    channelKeys, blotterEnabled
 } from "./redux/settings"
 
 import {
@@ -25,6 +25,11 @@ import { Colors, Icon } from "@blueprintjs/core";
 import {Box, Flex} from "reflexbox";
 
 import StockCard from "./components/StockCard";
+import Footer from "./components/Footer";
+import StockSelection from "./components/StockSelection";
+import ToggleButton from "./components/ToggleButton";
+import {blotterToggle} from "./action/index";
+import FloatingToggleButton from "./components/FloatingToggleButton";
 
 
 class App extends Component {
@@ -136,81 +141,27 @@ class App extends Component {
 
     renderStockSelection = (pushEvents, lastEvent) => {
 
-        const stockComponent = Object.keys(this.stockDetails).map(
-            (key) => {
-                var cardProps = {
-                    stockDetails:this.stockDetails[key],
-                    containerStyle:{
-                        width:350,
-                        height:250,
-                        marginRight:20,
-                        marginLeft:20
-                    },
-                    order:{},
-                    colorFg: Colors.BLUE3,
-                    key: key+"_stockSelection",
-                    content: <span style={{
-                        fontSize:60,
-                        color:Colors.BLUE2
-                    }}>
-                    {key}
-                </span>
-                }
-                if (pushEvents){
-                    cardProps['handleClick']=()=>this.handleStockSelect(key, lastEvent.channel, lastEvent.conversationId)
-                }
-                return <StockCard {...cardProps}/>
-            }
-        )
-        return <Flex wrap style={{
-                height:'100%',
-                backgroundColor:Colors.LIGHT_GRAY1,
-                flex:1,
-                alignItems:'center', // vertical
-                justifyContent: 'center', //horizontal
-            }}>
-                {stockComponent}
-            </Flex>
+        return <StockSelection {...{
+            stockDetails: this.stockDetails,
+            pushEvents: pushEvents,
+            lastEvent: lastEvent,
+            handleStockSelect:this.handleStockSelect
+        }}/>
     }
 
-    renderToggle = (style) => {
+    renderToggleButton = (fixedStyle, iconName, handleClick) => {
         return (
-            <a role="button" className=""  style={style} tabIndex="0">
-                <Icon iconName="chat" iconSize="inherit" onClick={this.toggleWebChat} style={{fontSize:60}}/>
-            </a>
+            <FloatingToggleButton {...{fixedStyle, iconName, handleClick}}/>
         )
     }
 
     renderFooter = (lastEvent) => {
         return (
-            <div>
-                {/*USE A PHANTOM BLOCK TO PREVENT THE FOOTER AFFECTING PAGE FLOW*/}
-                <div style={{
-                    display:'block',
-                    height:150,
-                    width:'100%'
-                }}/>
-                {/*FIXED FOOTER*/}
-                <div style={{
-                    height:150,
-                    position:'fixed', left:0, bottom:0,
-                    width:'100%',
-                    backgroundColor:Colors.BLUE1,
-                    display:'flex',
-                    alignItems:'center', // vertical
-                    justifyContent: 'center', //horizontal
-                }}>
-                    <div style={{
-                        color:Colors.LIGHT_GRAY4,
-                        fontWeight: 500,
-                        fontSize: 30
-                    }}
-                    >
-                        {this.renderToggle({marginRight:25, color:Colors.BLUE5})}
-                        {lastEvent.lastSystemMessage}
-                    </div>
-                </div>
-            </div>
+            <Footer {...{
+                lastSystemMessage:lastEvent.lastSystemMessage
+            }}>
+                <ToggleButton {...{style:{marginRight:25, color:Colors.BLUE5}, iconName:'chat', handleClick:this.toggleWebChat}}/>
+            </Footer>
         )
     }
 
@@ -233,6 +184,10 @@ class App extends Component {
         this.props.dispatch(webChatToggle())
     }
 
+    toggleView = () => {
+        this.props.dispatch(blotterToggle())
+    }
+
     render() {
         const {lastEvent, completedOrders, webChatEnabled} = this.props
         const order = lastEvent?lastEvent.lastOrderState:{}
@@ -249,23 +204,16 @@ class App extends Component {
                 flexDirection:'row',
                 height:'100%'
             }}>
-                <div className="App"  style={{
+                <div style={{
                     display:'flex',
                     flexDirection:'column',
                     height:'100%',
                     flex:1
                 }}>
+                    {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
                     {orderComponent}
                     {!webChatEnabled && this.renderFooter(lastEvent)}
-                    {webChatEnabled && <div style={{
-                        width:120, height:120,
-                        position:'fixed', left:0, bottom:0,
-                        display:'flex',
-                        alignItems:'center', // vertical
-                        justifyContent: 'center', //horizontal,
-                    }}>
-                        {this.renderToggle({color:Colors.BLUE1})}
-                    </div>}
+                    {webChatEnabled && this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
                 </div>
                 {webChatEnabled && this.renderWebchat()}
             </div>
@@ -278,6 +226,7 @@ function mapStateToProps(state) {
     return {
         completedOrders: getCompletedOrders(state),
         lastEvent: getLastEvent(state),
+        blotterEnabled: blotterEnabled(state),
         webChatEnabled: webChatEnabled(state),
         channelKeys: channelKeys(state)
     }
