@@ -137,8 +137,8 @@ class App extends Component {
         </div>
     }
 
-    handleStockSelect = (stock, channel, conversationId) => {
-        this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[channel], conversationId))
+    handleStockSelect = (stock, lastEvent) => {
+        this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[lastEvent.channel], lastEvent.conversationId, lastEvent.userId, lastEvent.userName))
     }
 
     renderStockSelection = (pushEvents, lastEvent) => {

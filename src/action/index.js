@@ -27,11 +27,13 @@ export const webChatToggle = () => {return {type:WEB_CHAT_TOGGLE}}
 
 export const blotterToggle = () => {return {type:BLOTTER_TOGGLE}}
 
-export const pushChannelEvent = (message, key, conversationId) => {
+export const pushChannelEvent = (message, key, conversationId, userId, userName) => {
     return {
         type:PUSH_CHANNEL_EVENT,
         message:message,
         key: key,
-        conversationId: conversationId
+        conversationId: conversationId,
+        userId: userId,
+        userName: userName
     }
 }

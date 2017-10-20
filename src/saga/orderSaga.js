@@ -53,7 +53,7 @@ function* orderSagaInit(){
 }
 
 function* pushChannelEvent(action){
-    const {message, key, conversationId} = action
+    const {message, key, conversationId, userId, userName} = action
     try {
         const pushResponse = yield call(
             axios.put,
@@ -61,7 +61,9 @@ function* pushChannelEvent(action){
             {
                 message:message,
                 channelKey:key,
-                conversationId:conversationId
+                conversationId:conversationId,
+                userId:userId,
+                userName:userName
             }
         )
         console.log(pushResponse)

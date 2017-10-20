@@ -32,7 +32,7 @@ export default class StockSelection extends Component {
                     TODO:: fix this by reusing the same user from the nexus
                 */
                 if (pushEvents){
-                    cardProps['handleClick']=()=>handleStockSelect('order '+key, lastEvent.channel, lastEvent.conversationId)
+                    cardProps['handleClick']=()=>handleStockSelect('order '+key, lastEvent)
                 }
                 return <StockCard {...cardProps}/>
             }
