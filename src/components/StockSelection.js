@@ -28,11 +28,8 @@ export default class StockSelection extends Component {
                     {key}
                 </span>
                 }
-                /*
-                    TODO:: fix this by reusing the same user from the nexus
-                */
                 if (pushEvents){
-                    cardProps['handleClick']=()=>handleStockSelect('order '+key, lastEvent)
+                    cardProps['handleClick']=()=>handleStockSelect(key, lastEvent)
                 }
                 return <StockCard {...cardProps}/>
             }
