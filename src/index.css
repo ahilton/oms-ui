@@ -26,3 +26,37 @@ html {
 .pt-card.selected-stock{
   background-color: #DB2C6F;
 }
+
+/*
+  BUY SELL CHOICE
+*/
+.buy-sell-choice{
+  color:white
+}
+.buy-sell-choice:hover{
+  cursor: pointer;
+}
+.buy-choice._Rfx6_, .sell-choice._Rfx6_{
+  padding:5px;
+  padding-bottom: 10px;
+}
+.buy-choice{
+  background-color: #15B371;
+  /*border-top-left-radius: 35px;*/
+  /*border-bottom-left-radius: 35px;*/
+}
+.sell-choice{
+  background-color: #F55656;
+  /*border-top-right-radius: 35px;*/
+  /*border-bottom-right-radius: 35px;*/
+}
+.buy-choice:hover, .selection-made .buy-choice{
+  background-color: #0F9960;
+}
+.sell-choice:hover, .selection-made .sell-choice{
+  background-color: #DB3737;
+}
+.deselected.buy-choice, .deselected.buy-choice:hover,
+.deselected.sell-choice, .deselected.sell-choice:hover{
+  background-color: #999999;
+}

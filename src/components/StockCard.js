@@ -6,7 +6,7 @@ import {Box, Flex} from "reflexbox";
 export default class StockCard extends Component {
 
     render() {
-        var {stockDetails, order, colorFg, content, containerStyle, handleClick, interactive, selected} = this.props
+        var {stockDetails, order, colorFg, content, footer, containerStyle, handleClick, interactive, selected} = this.props
         if (!containerStyle){
             containerStyle = {
                 width:400
@@ -73,7 +73,7 @@ export default class StockCard extends Component {
 
                     {contentComponent}
                 </Flex>
-
+                {footer && footer}
             </div>
         )
     }

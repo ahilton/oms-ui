@@ -120,12 +120,39 @@ class App extends Component {
         return defaultColors
     }
 
-    renderOrderComponent = (order) => {
+    renderOrderComponent = (showBuySell, order, stickySelect) => {
         const stockDetails = order&&order.stock?this.getDetailsForStock(order.stock):{
             code: '',
             name: ''
         }
+        let subComponent=null
         const colorChart = this.getColorChart(order)
+
+        if (showBuySell){
+            const selectedBuySell = stickySelect&&stickySelect.buysell?stickySelect.buysell:null
+            let sellClassName,buyClassName,buySellClassName
+            if (selectedBuySell){
+                sellClassName = selectedBuySell==='buy'?'deselected':''
+                buyClassName = selectedBuySell==='sell'?'deselected':''
+                buySellClassName = 'selection-made'
+            }
+            subComponent = <div>
+                <Flex wrap align='center' w={1} p={0} className={'buy-sell-choice '+buySellClassName} style={{
+                    textAlign:'center',
+                    fontSize: 40,
+                    fontVariant: 'small-caps'
+                }}>
+                    <Box  w={1/2} p={1} className={'buy-choice '+buyClassName} onClick={()=>this.handleBSSelect('buy', this.props.lastEvent)}>
+                        buy
+                    </Box>
+                    <Box  w={1/2} p={1} className={'sell-choice '+sellClassName} onClick={()=>this.handleBSSelect('sell', this.props.lastEvent)}>
+                        sell
+                    </Box>
+                </Flex>
+            </div>
+
+        }
+
         return <div style={{
             backgroundColor:colorChart.bg,
             display:'flex',
@@ -136,14 +163,24 @@ class App extends Component {
             <StockCard {...{
                 stockDetails:stockDetails,
                 order:order,
-                colorFg: colorChart.fg
-            }}/>
+                colorFg: colorChart.fg,
+                footer:subComponent
+            }}>
+            </StockCard>
         </div>
     }
 
     handleStockSelect = (stock, lastEvent) => {
-        this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[lastEvent.channel], lastEvent.conversationId, lastEvent.userId, lastEvent.userName))
-        this.props.dispatch(stickySelect({stock:stock}))
+        this.pushChannelEvent(stock, lastEvent, {stock:stock})
+    }
+
+    handleBSSelect = (bs, lastEvent) => {
+        this.pushChannelEvent(bs, lastEvent, {buysell:bs})
+    }
+
+    pushChannelEvent = (msg, lastEvent, ss) => {
+        this.props.dispatch(pushChannelEvent(msg, this.props.channelKeys[lastEvent.channel], lastEvent.conversationId, lastEvent.userId, lastEvent.userName))
+        this.props.dispatch(stickySelect(ss))
     }
 
     renderStockSelection = (pushEvents, lastEvent, stickySelect) => {
@@ -208,9 +245,10 @@ class App extends Component {
         const order = lastEvent?lastEvent.lastOrderState:{}
 
         const pushEvents = lastEvent&&lastEvent.channel==='webchat'
+        const showBuySell = pushEvents&&lastEvent&&lastEvent.lastSystemMessage&&lastEvent.lastSystemMessage.startsWith("Would you like to buy or sell")
 
         const orderComponent = (order && order.stock)?
-            this.renderOrderComponent(order):
+            this.renderOrderComponent(showBuySell, order, stickySelect):
             this.renderStockSelection(pushEvents, lastEvent, stickySelect)
 
         return (
