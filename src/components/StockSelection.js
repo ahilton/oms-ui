@@ -21,10 +21,7 @@ export default class StockSelection extends Component {
                     order:{},
                     colorFg: Colors.BLUE3,
                     key: key+"_stockSelection",
-                    content: <span style={{
-                        fontSize:60,
-                        color:Colors.BLUE2
-                    }}>
+                    content: <span className="stock-select-name">
                     {key}
                 </span>
                 }

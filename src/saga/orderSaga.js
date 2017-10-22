@@ -7,13 +7,17 @@ import {
     lastEventUpdate
 } from '../action'
 import {PUSH_CHANNEL_EVENT} from "../action/index";
+import {getLastEvent} from "../redux/order";
 const axios = require('axios')
 const botLoggerHostName = 'https://omslogger.azurewebsites.net'
 // const botLoggerHostName = 'http://localhost:8080'
-const nexusHostName = 'http://localhost:8080'
+const gatewayHostName = 'https://omsgateway.azurewebsites.net'
+//const gatewayHostName = 'http://localhost:8080'
 
 function* pollForOrderUpdates() {
 
+    var lastEvent = yield select((store) => getLastEvent(store))
+    const lastTimestamp = lastEvent?lastEvent.timestamp:''
     try {
         const lastOrderResponse = yield call(
             axios.get,
@@ -21,6 +25,10 @@ function* pollForOrderUpdates() {
             {params: {}}
         )
         //console.log(lastOrderResponse)
+        if (lastOrderResponse.data && lastTimestamp && lastOrderResponse.data.timestamp===lastTimestamp){
+            // Continue with updates only when the timestamp of the last event changes to avoid flickering effects
+            return
+        }
         yield put(lastEventUpdate(lastOrderResponse.data))
     }
     catch(error){
@@ -57,7 +65,7 @@ function* pushChannelEvent(action){
     try {
         const pushResponse = yield call(
             axios.put,
-            nexusHostName+'/event/push',
+            gatewayHostName+'/event/push',
             {
                 message:message,
                 channelKey:key,
