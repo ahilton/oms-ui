@@ -13,7 +13,7 @@ export default class LaunchPage extends Component {
         return (
             <Flex wrap style={{
                 height:'100%',
-                backgroundColor:Colors.BLUE2,
+                backgroundColor:Colors.BLUE3,
                 flex:1,
                 alignItems:'center', // vertical
                 justifyContent: 'center', //horizontal,
@@ -28,7 +28,7 @@ export default class LaunchPage extends Component {
                 >A.I. Order Platform</div>
                 <div style={{
                     fontFamily:'HelveticaNeue-Light',
-                    fontSize:40,
+                    fontSize:45,
                     marginBottom:60,
                     color:Colors.BLUE5,
                     fontVariant:'small-caps',
