@@ -28,6 +28,8 @@ export const webChatToggle = () => {return {type:WEB_CHAT_TOGGLE}}
 
 export const blotterToggle = () => {return {type:BLOTTER_TOGGLE}}
 
+export const clearLastOrder = () => {return lastEventUpdate(null)}
+
 export const pushChannelEvent = (message, key, conversationId, userId, userName) => {
     return {
         type:PUSH_CHANNEL_EVENT,

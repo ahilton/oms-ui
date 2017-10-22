@@ -7,7 +7,7 @@ import {
     lastEventUpdate
 } from '../action'
 import {PUSH_CHANNEL_EVENT} from "../action/index";
-import {getLastEvent} from "../redux/order";
+import {getLastEvent, getLastTimestamp} from "../redux/order";
 const axios = require('axios')
 const botLoggerHostName = 'https://omslogger.azurewebsites.net'
 // const botLoggerHostName = 'http://localhost:8080'
@@ -16,8 +16,7 @@ const gatewayHostName = 'https://omsgateway.azurewebsites.net'
 
 function* pollForOrderUpdates() {
 
-    var lastEvent = yield select((store) => getLastEvent(store))
-    const lastTimestamp = lastEvent?lastEvent.timestamp:''
+    var lastTimestamp = yield select((store) => getLastTimestamp(store))
     try {
         const lastOrderResponse = yield call(
             axios.get,

@@ -23,7 +23,8 @@ import {
     webChatToggle,
     blotterToggle,
     pushChannelEvent,
-    stickySelect
+    stickySelect,
+    clearLastOrder
 } from "./action"
 
 import { Colors, Icon } from "@blueprintjs/core";
@@ -37,6 +38,7 @@ import ToggleButton from "./components/ToggleButton";
 import FloatingToggleButton from "./components/FloatingToggleButton";
 import Blotter from "./components/Blotter";
 import LoadingB from "./components/LoadingB";
+import LaunchPage from "./components/LaunchPage";
 
 class App extends Component {
 
@@ -171,14 +173,14 @@ class App extends Component {
     }
 
     handleStockSelect = (stock, lastEvent) => {
-        this.pushChannelEvent(stock, lastEvent, {stock:stock})
+        this.handlepushChannelEvent(stock, lastEvent, {stock:stock})
     }
 
     handleBSSelect = (bs, lastEvent) => {
-        this.pushChannelEvent(bs, lastEvent, {buysell:bs})
+        this.handlepushChannelEvent(bs, lastEvent, {buysell:bs})
     }
 
-    pushChannelEvent = (msg, lastEvent, ss) => {
+    handlepushChannelEvent = (msg, lastEvent, ss) => {
         this.props.dispatch(pushChannelEvent(msg, this.props.channelKeys[lastEvent.channel], lastEvent.conversationId, lastEvent.userId, lastEvent.userName))
         this.props.dispatch(stickySelect(ss))
     }
@@ -233,6 +235,10 @@ class App extends Component {
         this.props.dispatch(blotterToggle())
     }
 
+    handleClear = () => {
+        this.props.dispatch(clearLastOrder())
+    }
+
     pageGrowStyle = {
         display:'flex',
         flexDirection:'column',
@@ -242,14 +248,27 @@ class App extends Component {
 
     render() {
         const {lastEvent, completedOrders, webChatEnabled, blotterEnabled, stickySelect} = this.props
+        const orderPageEnabled = lastEvent?true:false
         const order = lastEvent?lastEvent.lastOrderState:{}
 
-        const pushEvents = lastEvent&&lastEvent.channel==='webchat'
+        const pushEvents = lastEvent&&(lastEvent.channel==='webchat'||lastEvent.channel==='directline')
         const showBuySell = pushEvents&&lastEvent&&lastEvent.lastSystemMessage&&lastEvent.lastSystemMessage.startsWith("Would you like to buy or sell")
 
         const orderComponent = (order && order.stock)?
             this.renderOrderComponent(showBuySell, order, stickySelect):
             this.renderStockSelection(pushEvents, lastEvent, stickySelect)
+
+        const orderPage = lastEvent?<div style={this.pageGrowStyle}>
+            {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
+            {this.renderToggleButton({left:0, top:60}, 'small-cross', this.handleClear)}
+            {orderComponent}
+            {!webChatEnabled && this.renderFooter(lastEvent)}
+            {webChatEnabled && this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
+        </div>:<div style={this.pageGrowStyle}>
+            {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
+            <LaunchPage/>
+            {this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
+        </div>
 
         return (
 
@@ -263,12 +282,7 @@ class App extends Component {
                     <Blotter {...{stockDetails:this.stockDetails, completedOrders}}/>
                     {this.renderToggleButton({left:0, top:0}, 'cell-tower', this.toggleView)}
                 </div>}
-                {!blotterEnabled && <div style={this.pageGrowStyle}>
-                    {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
-                    {orderComponent}
-                    {!webChatEnabled && this.renderFooter(lastEvent)}
-                    {webChatEnabled && this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
-                </div>}
+                {!blotterEnabled && orderPage}
                 {webChatEnabled && this.renderWebchat()}
             </div>
         );
