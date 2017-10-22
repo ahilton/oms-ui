@@ -5,11 +5,13 @@ import {connect} from 'react-redux'
 import 'normalize.css/normalize.css'
 import '@blueprintjs/core/dist/blueprint.css'
 import 'react-table/react-table.css'
+import "react-progress-2/main.css"
+
 import './App.css';
 
 import {
     getCompletedOrders,
-    getLastEvent
+    getLastEvent, getStickySelect
 } from './redux/order'
 
 import {
@@ -20,10 +22,12 @@ import {
 import {
     webChatToggle,
     blotterToggle,
-    pushChannelEvent
+    pushChannelEvent,
+    stickySelect
 } from "./action"
 
 import { Colors, Icon } from "@blueprintjs/core";
+
 import {Box, Flex} from "reflexbox";
 
 import StockCard from "./components/StockCard";
@@ -32,7 +36,7 @@ import StockSelection from "./components/StockSelection";
 import ToggleButton from "./components/ToggleButton";
 import FloatingToggleButton from "./components/FloatingToggleButton";
 import Blotter from "./components/Blotter";
-
+import LoadingB from "./components/LoadingB";
 
 class App extends Component {
 
@@ -139,14 +143,16 @@ class App extends Component {
 
     handleStockSelect = (stock, lastEvent) => {
         this.props.dispatch(pushChannelEvent(stock, this.props.channelKeys[lastEvent.channel], lastEvent.conversationId, lastEvent.userId, lastEvent.userName))
+        this.props.dispatch(stickySelect({stock:stock}))
     }
 
-    renderStockSelection = (pushEvents, lastEvent) => {
+    renderStockSelection = (pushEvents, lastEvent, stickySelect) => {
 
         return <StockSelection {...{
             stockDetails: this.stockDetails,
             pushEvents: pushEvents,
             lastEvent: lastEvent,
+            stickySelect: stickySelect,
             handleStockSelect:this.handleStockSelect
         }}/>
     }
@@ -198,21 +204,23 @@ class App extends Component {
     }
 
     render() {
-        const {lastEvent, completedOrders, webChatEnabled, blotterEnabled} = this.props
+        const {lastEvent, completedOrders, webChatEnabled, blotterEnabled, stickySelect} = this.props
         const order = lastEvent?lastEvent.lastOrderState:{}
 
         const pushEvents = lastEvent&&lastEvent.channel==='webchat'
 
         const orderComponent = (order && order.stock)?
             this.renderOrderComponent(order):
-            this.renderStockSelection(pushEvents, lastEvent)
+            this.renderStockSelection(pushEvents, lastEvent, stickySelect)
 
         return (
+
             <div style={{
                 display:'flex',
                 flexDirection:'row',
                 height:'100%'
             }}>
+                {stickySelect && Object.keys(stickySelect).length > 0 && <LoadingB />}
                 {blotterEnabled && <div style={this.pageGrowStyle}>
                     <Blotter {...{stockDetails:this.stockDetails, completedOrders}}/>
                     {this.renderToggleButton({left:0, top:0}, 'cell-tower', this.toggleView)}
@@ -234,6 +242,7 @@ function mapStateToProps(state) {
     return {
         completedOrders: getCompletedOrders(state),
         lastEvent: getLastEvent(state),
+        stickySelect:getStickySelect(state),
         blotterEnabled: blotterEnabled(state),
         webChatEnabled: webChatEnabled(state),
         channelKeys: channelKeys(state)

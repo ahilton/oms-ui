@@ -1,6 +1,7 @@
 export const ORDER_LAST_EVENT_UPDATE = 'ORDER_LAST_EVENT_UPDATE'
 export const ORDER_RESET = 'ORDER_RESET'
 export const ORDER_COMPLETED_ORDERS_UPDATE = 'ORDER_COMPLETED_ORDERS_UPDATE'
+export const ORDER_STICKY_SELECT = 'ORDER_STICKY_SELECT'
 
 export const WEB_CHAT_TOGGLE = 'WEB_CHAT_TOGGLE'
 export const BLOTTER_TOGGLE = 'BLOTTER_TOGGLE'
@@ -35,5 +36,12 @@ export const pushChannelEvent = (message, key, conversationId, userId, userName)
         conversationId: conversationId,
         userId: userId,
         userName: userName
+    }
+}
+
+export const stickySelect = (data) => {
+    return {
+        type:ORDER_STICKY_SELECT,
+        data:data
     }
 }

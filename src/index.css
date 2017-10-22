@@ -14,12 +14,15 @@ html {
  */
 .pt-card.pt-interactive:hover{
   background-color: #2B95D6; /*rgb(14, 90, 138); /*DARK BLUE*/
-
 }
 .stock-select-name{
   font-size: 60px;
   color: rgb(14, 90, 138);
 }
-.pt-card.pt-interactive:hover .stock-select-name{
+.pt-card.pt-interactive:hover .stock-select-name,
+.pt-card.selected-stock .stock-select-name{
   color: white;
+}
+.pt-card.selected-stock{
+  background-color: #DB2C6F;
 }

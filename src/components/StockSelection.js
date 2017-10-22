@@ -7,7 +7,8 @@ import StockCard from "./StockCard";
 export default class StockSelection extends Component {
 
     render() {
-        const {lastEvent, pushEvents, handleStockSelect} = this.props
+        const {lastEvent, pushEvents, handleStockSelect, stickySelect} = this.props
+        const selectedStock = stickySelect&&stickySelect.stock?stickySelect.stock:undefined
         const stockComponent = Object.keys(this.props.stockDetails).map(
             (key) => {
                 var cardProps = {
@@ -21,6 +22,8 @@ export default class StockSelection extends Component {
                     order:{},
                     colorFg: Colors.BLUE3,
                     key: key+"_stockSelection",
+                    interactive: pushEvents&&!selectedStock,
+                    selected: key===selectedStock,
                     content: <span className="stock-select-name">
                     {key}
                 </span>
