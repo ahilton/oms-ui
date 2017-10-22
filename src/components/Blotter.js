@@ -86,14 +86,15 @@ export default class ToggleButton extends Component {
                 display:'flex',
                 flex:1,
                 alignItems:'center', // vertical
-                justifyContent: 'center', //horizontal
+                justifyContent: 'center', //horizontal,
+                flexDirection:'column'
                 }}>
 
-                <PieChart width={800} height={400} onMouseEnter={this.onPieEnter}>
+                <PieChart width={200} height={200} onMouseEnter={this.onPieEnter}>
                     <Pie
                         data={data}
-                        cx={300}
-                        cy={200}
+                        cx={100}
+                        cy={100}
                         labelLine={false}
                         label={renderCustomizedLabel}
                         outerRadius={80}

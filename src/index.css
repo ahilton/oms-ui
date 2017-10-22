@@ -58,5 +58,5 @@ html {
 }
 .deselected.buy-choice, .deselected.buy-choice:hover,
 .deselected.sell-choice, .deselected.sell-choice:hover{
-  background-color: #999999;
+  background-color: #bbbbbb;
 }

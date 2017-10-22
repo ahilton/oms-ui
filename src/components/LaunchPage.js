@@ -13,7 +13,7 @@ export default class LaunchPage extends Component {
         return (
             <Flex wrap style={{
                 height:'100%',
-                backgroundColor:Colors.BLUE3,
+                backgroundColor:Colors.BLUE2,
                 flex:1,
                 alignItems:'center', // vertical
                 justifyContent: 'center', //horizontal,
@@ -21,19 +21,20 @@ export default class LaunchPage extends Component {
             }}>
                 <div style={{
                     //fontFamily:'HelveticaNeue-Light',
-                    fontSize:70,
-                    fontWeight:600,
+                    fontSize:80,
+                    fontWeight:400,
                     color:Colors.WHITE,
                 }}
                 >A.I. Order Platform</div>
                 <div style={{
                     fontFamily:'HelveticaNeue-Light',
-                    fontSize:50,
+                    fontSize:40,
                     marginBottom:60,
                     color:Colors.BLUE5,
-                    fontVariant:'small-caps'
+                    fontVariant:'small-caps',
+                    letterSpacing: 3
                 }}
-                >bank to the <span style={{}}>future</span></div>
+                >bank to the <span style={{}}>future</span> </div>
                 <ReactLoading type={'bubbles'} color={Colors.BLUE5} height='100' width='100' />
 
             </Flex>
