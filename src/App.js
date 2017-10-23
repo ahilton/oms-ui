@@ -196,9 +196,9 @@ class App extends Component {
         }}/>
     }
 
-    renderToggleButton = (fixedStyle, iconName, handleClick) => {
+    renderToggleButton = (fixedStyle, iconName, handleClick, color) => {
         return (
-            <FloatingToggleButton {...{fixedStyle, iconName, handleClick}}/>
+            <FloatingToggleButton {...{fixedStyle, iconName, handleClick, color}}/>
         )
     }
 
@@ -284,7 +284,7 @@ class App extends Component {
                         stickySelect:stickySelect,
                         completedOrders
                     }}/>
-                    {this.renderToggleButton({left:0, top:0}, 'cell-tower', this.toggleView)}
+                    {this.renderToggleButton({left:0, top:0}, 'label', this.toggleView, 'white')}
                 </div>}
                 {!blotterEnabled && orderPage}
                 {webChatEnabled && this.renderWebchat()}

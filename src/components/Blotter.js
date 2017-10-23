@@ -41,8 +41,8 @@ export default class ToggleButton extends Component {
     * */
 
 
-    buyColors = ['#137CBD', '#2965CC', '#7157D9', '#8F398F']
-    sellColors = ['#137CBD', '#2965CC', '#7157D9', '#8F398F']
+    buyColors = ['#2B95D6', '#4580E6', '#9179F2', '#A854A8', '#F5498B']
+    sellColors = ['#2B95D6', '#4580E6', '#9179F2', '#A854A8', '#F5498B']
 
     render() {
         const {completedOrders, stockDetails, stickySelect} = this.props
@@ -118,13 +118,13 @@ export default class ToggleButton extends Component {
                 alignItems:'center', // vertical
                 justifyContent: 'center', //horizontal,
                 flexDirection:'column',
-                backgroundColor:'#eeeeee'
+                backgroundColor:'#182026'
                 }}>
+
                 {data.length > 0 &&
                     <PieChart width={600} height={250} onMouseEnter={this.onPieEnter} style={{
-                        marginTop:-200,
-                        //marginLeft:350,
-                        marginBottom:-20
+                        marginTop:-150,
+                        marginBottom:-50,
                     }}>
                         <Pie {...{
                             data: data,
@@ -150,13 +150,18 @@ export default class ToggleButton extends Component {
                                          color = colorArray[index % colorArray.length]
                                      }
                                      // console.log(index)
-                                     return <Cell fill={color}/>
+                                     return <Cell strokeWidth={0} fill={color}/>
                                  }
                                  )}
                         </Pie>
                     </PieChart>
                 }
-                <h1 style={{width:600, marginBottom:30}}>Holdings</h1>
+                <h1 style={{
+                    width:600,
+                    fontWeight:400,
+                    marginBottom:20,
+                    color:'#A7B6C2'
+                }}>Holdings</h1>
                 <ReactTable
                     {...{
                         style: {

@@ -4,7 +4,8 @@ import ToggleButton from "./ToggleButton";
 export default class FloatingToggleButton extends Component {
 
     render() {
-        const {fixedStyle, iconName, handleClick} = this.props
+        const {fixedStyle, iconName, handleClick, color} = this.props
+        const buttonColor = color?color:'black'
         return (
             <div style={{
                 ...fixedStyle,
@@ -14,7 +15,7 @@ export default class FloatingToggleButton extends Component {
                 alignItems:'center', // vertical
                 justifyContent: 'center', //horizontal,
             }}>
-                <ToggleButton {...{style:{color:'black', opacity:0.2}, iconName:iconName, handleClick:handleClick}}/>
+                <ToggleButton {...{style:{color:buttonColor, opacity:0.2}, iconName:iconName, handleClick:handleClick}}/>
             </div>
         )
     }
