@@ -279,7 +279,11 @@ class App extends Component {
             }}>
                 {stickySelect && Object.keys(stickySelect).length > 0 && <LoadingB />}
                 {blotterEnabled && <div style={this.pageGrowStyle}>
-                    <Blotter {...{stockDetails:this.stockDetails, completedOrders}}/>
+                    <Blotter {...{
+                        stockDetails:this.stockDetails,
+                        stickySelect:stickySelect,
+                        completedOrders
+                    }}/>
                     {this.renderToggleButton({left:0, top:0}, 'cell-tower', this.toggleView)}
                 </div>}
                 {!blotterEnabled && orderPage}

@@ -40,20 +40,16 @@ export default class ToggleButton extends Component {
     *
     * */
 
-    //
-    // buyColors = ["#1D7324", "#469047", "#6AAE6A", "#8DCD8F", "#B1ECB5"]
-    // sellColors = ["#A82255", "#BF4B72", "#D56F90", "#EB91AF", "#FFB3D0"]
-    //buyColors = ['#00998C', '#00B3A4', '#14CCBD', '#2EE6D6'] //turquoise
-    //sellColors = ['#00998C', '#00B3A4', '#14CCBD', '#2EE6D6'] //turquiose
-    buyColors = ['#DB2C6F', '#F5498B', '#FF66A1', '#2EE6D6']
-    sellColors = ['#DB2C6F', '#F5498B', '#FF66A1', '#2EE6D6']
-    //buyColors = ["#2965CC", "#29A634", "#D99E0B", "#D13913", "#8F398F", "#00B3A4", "#DB2C6F", "#9BBF30", "#96622D", "#7157D9"]
-    //sellColors = ["#2965CC", "#29A634", "#D99E0B", "#D13913", "#8F398F", "#00B3A4", "#DB2C6F", "#9BBF30", "#96622D", "#7157D9"]
-    //buyColors = ['#0A6640', '#0D8050', '#0F9960']
-    //sellColors = ['#9E2B0E', "#B83211", "#D13913"]
+
+    buyColors = ['#137CBD', '#2965CC', '#7157D9', '#8F398F']
+    sellColors = ['#137CBD', '#2965CC', '#7157D9', '#8F398F']
 
     render() {
-        const {completedOrders, stockDetails} = this.props
+        const {completedOrders, stockDetails, stickySelect} = this.props
+        const highlightedStock = stickySelect &&
+                                    stickySelect.lastOrderHighlight &&
+                                    stickySelect.lastOrderHighlight.stock?
+            stickySelect.lastOrderHighlight.stock.toLowerCase():null
         var holdings = {}
         if (completedOrders){
             for (var i=0; i<completedOrders.length;i++){
@@ -124,7 +120,6 @@ export default class ToggleButton extends Component {
                 flexDirection:'column',
                 backgroundColor:'#eeeeee'
                 }}>
-
                 {data.length > 0 &&
                     <PieChart width={600} height={250} onMouseEnter={this.onPieEnter} style={{
                         marginTop:-200,
@@ -144,12 +139,20 @@ export default class ToggleButton extends Component {
                         }}>
                              {
                                  data.map((entry, index) => {
-                                 console.log(entry)
-                                 console.log(holdings[entry.name])
-                                 console.log(index)
-                                 const colorArray = holdings[entry.name]>0?this.buyColors:this.sellColors
-                                 return <Cell fill={colorArray[index % colorArray.length]}/>
-                             })}
+                                     // console.log(entry)
+                                     // console.log(holdings[entry.name])
+                                     var color
+                                     if (entry.name.toLowerCase() === highlightedStock){
+                                         color = '#D99E0B'
+                                     }
+                                     else {
+                                         const colorArray = holdings[entry.name]>0?this.buyColors:this.sellColors
+                                         color = colorArray[index % colorArray.length]
+                                     }
+                                     // console.log(index)
+                                     return <Cell fill={color}/>
+                                 }
+                                 )}
                         </Pie>
                     </PieChart>
                 }
@@ -167,6 +170,7 @@ export default class ToggleButton extends Component {
                             }
                         ],
                         defaultExpanded:{0:{},1:{},2:{},3:{},4:{}},
+                        expanded:{0:{},1:{},2:{},3:{},4:{}},
                         data:completedOrders,
                         columns:columns,
                         minRows:0,
@@ -174,8 +178,9 @@ export default class ToggleButton extends Component {
                         pivotBy:['stock'],
                         className:'-striped holdings-table',
                         getTrProps:(state, rowInfo)=>{
+                            const rowClassPrefix = rowInfo.row.stock.toLowerCase() === highlightedStock?'tr-highlight ':''
                             return {
-                                className:'rt-tr-level-'+rowInfo.level
+                                className:rowClassPrefix+'rt-tr-level-'+rowInfo.level
                             }
                         },
                         getTdProps:(state, rowInfo, col)=>{

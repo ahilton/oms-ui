@@ -1,7 +1,8 @@
 
 import {
     WEB_CHAT_TOGGLE,
-    BLOTTER_TOGGLE
+    BLOTTER_TOGGLE,
+    BLOTTER_SELECT
 } from "../action";
 
 /*
@@ -32,6 +33,11 @@ const settings = (state = settingsInitialState, action) => {
             return {
                 ...state,
                 blotterEnabled: !state.blotterEnabled
+            }
+        case BLOTTER_SELECT:
+            return {
+                ...state,
+                blotterEnabled: true
             }
         default:
             return state

@@ -5,6 +5,7 @@ export const ORDER_STICKY_SELECT = 'ORDER_STICKY_SELECT'
 
 export const WEB_CHAT_TOGGLE = 'WEB_CHAT_TOGGLE'
 export const BLOTTER_TOGGLE = 'BLOTTER_TOGGLE'
+export const BLOTTER_SELECT = 'BLOTTER_SELECT'
 
 export const PUSH_CHANNEL_EVENT = 'PUSH_CHANNEL_EVENT'
 
@@ -27,6 +28,8 @@ export const reset = () => {return {type:ORDER_RESET}}
 export const webChatToggle = () => {return {type:WEB_CHAT_TOGGLE}}
 
 export const blotterToggle = () => {return {type:BLOTTER_TOGGLE}}
+
+export const blotterSelect = () => {return {type:BLOTTER_SELECT}}
 
 export const clearLastOrder = () => {return lastEventUpdate(null)}
 

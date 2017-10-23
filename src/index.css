@@ -73,6 +73,12 @@ html {
 .holdings-table.ReactTable .rt-tr.rt-tr-level-0.-odd {
   background-color: #0e5383;
 }
+.rt-tr.tr-highlight.rt-tr-level-0,
+.holdings-table.ReactTable .rt-tr.tr-highlight.rt-tr-level-0.-odd {
+  background-color: #C22762;
+  background-color: #BF8C0A;
+}
+
 
 .rt-tr.rt-tr-level-1 {
   color:white;
@@ -82,9 +88,23 @@ html {
   background-color: #2B95D6;
 
 }
+.rt-tr.tr-highlight.rt-tr-level-1 {
+  background-color: #F2B824;
+  color: #333333;
+}
+.holdings-table.ReactTable .rt-tr.tr-highlight.rt-tr-level-1.-odd {
+  background-color: #ebb124;
+  color: #333333;
+}
 
 
 /*BUY SELL*/
+.rt-tr.rt-tr-level-0 .rt-td.td-direction-buy,
+.rt-tr.rt-tr-level-0 .rt-td.td-direction-sell,
+.rt-tr.rt-tr-level-1 .rt-td.td-direction-buy,
+.rt-tr.rt-tr-level-1 .rt-td.td-direction-sell{
+  color:white
+}
 .rt-tr.rt-tr-level-0 .rt-td.td-direction-buy{
   background-color: #0D8050;
 }
@@ -113,7 +133,7 @@ html {
 
 
 .holdings-table{
-  font-size: 16px;
+  font-size: 18px;
 }
 
 
