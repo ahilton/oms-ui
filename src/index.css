@@ -60,3 +60,65 @@ html {
 .deselected.sell-choice, .deselected.sell-choice:hover{
   background-color: #bbbbbb;
 }
+
+
+/**
+  TABLE CSS
+ */
+
+.rt-tr.rt-tr-level-0 {
+  color:white;
+  background-color: #0E5A8A;
+}
+.holdings-table.ReactTable .rt-tr.rt-tr-level-0.-odd {
+  background-color: #0e5383;
+}
+
+.rt-tr.rt-tr-level-1 {
+  color:white;
+  background-color: #2ba1e2;
+}
+.holdings-table.ReactTable .rt-tr.rt-tr-level-1.-odd {
+  background-color: #2B95D6;
+
+}
+
+
+/*BUY SELL*/
+.rt-tr.rt-tr-level-0 .rt-td.td-direction-buy{
+  background-color: #0D8050;
+}
+.rt-tr.rt-tr-level-0 .rt-td.td-direction-sell{
+  background-color: #C23030;
+}
+.rt-tr.rt-tr-level-1 .rt-td.td-direction-buy{
+  background-color: #12af6d;
+}
+.rt-tr.rt-tr-level-1 .rt-td.td-direction-sell{
+  background-color: #e03232;
+}
+
+.holdings-table.ReactTable .rt-thead {
+  background-color: #cccccc;
+}
+.holdings-table.ReactTable .rt-tbody .rt-tr-group {
+  border-bottom: none;
+}
+
+.holdings-table.ReactTable .rt-thead .rt-th.-sort-asc,
+.holdings-table.ReactTable .rt-thead .rt-td.-sort-asc {
+  -webkit-box-shadow: inset 0 3px 0 0 #ebad0b;
+  box-shadow: inset 0 3px 0 0 #ecaf0b;
+}
+
+
+.holdings-table{
+  font-size: 16px;
+}
+
+
+
+
+
+
+

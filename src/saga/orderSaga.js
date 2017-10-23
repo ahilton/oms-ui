@@ -24,7 +24,7 @@ function* pollForOrderUpdates() {
             {params: {}}
         )
         //console.log(lastOrderResponse)
-        if (lastOrderResponse.data && lastTimestamp && lastOrderResponse.data.timestamp===lastTimestamp){
+        if (lastOrderResponse.data && lastTimestamp && (!lastOrderResponse.data.timestamp || lastOrderResponse.data.timestamp===lastTimestamp)){
             // Continue with updates only when the timestamp of the last event changes to avoid flickering effects
             return
         }
