@@ -12,6 +12,14 @@ function getQtyWIthDirecion(direction, qty) {
     return (direction.toLowerCase() === 'sell' ? -1 : 1) * qty;
 }
 
+function niceNumber(num){
+    return num.toLocaleString(undefined);
+}
+
+function niceDecimal(num){
+    return num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
 export default class ToggleButton extends Component {
 
     /*
@@ -41,15 +49,19 @@ export default class ToggleButton extends Component {
     * */
 
 
-    buyColors = ['#2B95D6', '#4580E6', '#9179F2', '#A854A8', '#F5498B']
-    sellColors = ['#2B95D6', '#4580E6', '#9179F2', '#A854A8', '#F5498B']
+    buyColors = ['#00B3A4', '#29A634', '#0F9960', '#9BBF30']
+    sellColors = ['#D13913', '#DB3737', '#DB2C6F', '#8F398F']
 
     render() {
         const {completedOrders, stockDetails, stickySelect} = this.props
         const highlightedStock = stickySelect &&
                                     stickySelect.lastOrderHighlight &&
                                     stickySelect.lastOrderHighlight.stock?
-            stickySelect.lastOrderHighlight.stock.toLowerCase():null
+                                    stickySelect.lastOrderHighlight.stock.toLowerCase():null
+        const highlightedOrderTime = stickySelect &&
+                                    stickySelect.lastOrderHighlight &&
+                                    stickySelect.lastOrderHighlight.timeStamp?
+                                        stickySelect.lastOrderHighlight.timeStamp:null
         var holdings = {}
         if (completedOrders){
             for (var i=0; i<completedOrders.length;i++){
@@ -73,6 +85,9 @@ export default class ToggleButton extends Component {
         })
 
         const renderStockLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+            if (percent < 0.5){
+                return ''
+            }
             return data[index].name+': '+data[index].value.toLocaleString()
         };
 
@@ -82,12 +97,27 @@ export default class ToggleButton extends Component {
                 id: 'code',
                 accessor: o=>stockDetails[o.stock.toLowerCase()].code,
                 aggregate:vals=>_.uniq(vals),
-                style:{textAlign:'center'}
-
-            }, {
+                Cell:row=><span><span className='pointer'/>{row.value}</span>,
+                style:{textAlign:'center'},
+                width: 80
+            },{
                 Header: 'Stock',
                 accessor: 'stock',
-                width: 130
+                width: 150
+            }, {
+                Header: 'Date',
+                accessor: 'timestamp',
+                Cell:row=>row.value?new Date(row.value).toLocaleDateString():'',
+                aggregate:vals=>null,
+                style:{textAlign:'center'},
+                width: 110
+            }, {
+                Header: 'Time',
+                accessor: 'timestamp',
+                Cell:row=>row.value?new Date(row.value).toLocaleTimeString():'',
+                aggregate:vals=>null,
+                style:{textAlign:'center'},
+                width: 100
             }, {
                 Header: 'B/S',
                 id:'direction',
@@ -99,6 +129,7 @@ export default class ToggleButton extends Component {
                     return <span className={'direction-col-'+bs}>{bs}</span>
                 },
                 aggregate:vals=>_.sum(vals),
+                width: 90
                 //Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
             }, {
                 id: 'qty', // Required because our accessor is not a string
@@ -106,8 +137,24 @@ export default class ToggleButton extends Component {
                 accessor: (fill)=> getQtyWIthDirecion(fill.direction, fill.qty),
                 Cell: row => row.value.toLocaleString(),
                 aggregate:vals=>_.sum(vals),
+                style:{textAlign:'right', fontWeight:500},
+                width: 130
+            },{
+                Header:'Price',
+                id:'price',
+                accessor: 'price',
                 style:{textAlign:'right'},
-                width: 150
+                Cell: row => row.value?<span><span className="dollar-sign">$</span>{row.value.toFixed(2)}</span>:'',
+                aggregate:vals=>null,
+                width: 100
+            },{
+                Header:'Cost',
+                id:'cost',
+                accessor: (fill)=> fill.qty * fill.price,
+                aggregate:vals=>_.sum(vals),
+                Cell: row => <span><span className="dollar-sign">$</span>{niceNumber(row.value)}</span>,
+                style:{textAlign:'right'},
+                width: 130
             }
         ]
 
@@ -120,11 +167,33 @@ export default class ToggleButton extends Component {
                 flexDirection:'column',
                 backgroundColor:'#182026'
                 }}>
+                <h1 style={{
+                    width:900,
+                    fontWeight:300,
+                    marginBottom:-180,
+                    color:'#bbbbbb',
+                    paddingBottom: '10px',
+                    //borderTop: '1px solid white'
+                }}>Holdings</h1>
 
                 {data.length > 0 &&
-                    <PieChart width={600} height={250} onMouseEnter={this.onPieEnter} style={{
-                        marginTop:-150,
-                        marginBottom:-50,
+                    <div style={{
+                        //backgroundColor:'#0c4064',
+                        marginLeft:492,
+                        //borderTopLeftRadius:25,
+                        //borderTopRightRadius:25,
+                        //border:'10 solid red',
+                        borderColor:'#394B59',
+                        borderWidth:2,
+                        borderStyle:'dashed',
+                        borderBottomWidth:0
+                        //marginTop:-150,
+                        //marginBottom:-50,
+                    }}>
+                    <PieChart width={400} height={200} onMouseEnter={this.onPieEnter} style={{
+
+                        //backgroundColor:'#394B59',
+                        //paddingLeft:300
                     }}>
                         <Pie {...{
                             data: data,
@@ -150,22 +219,18 @@ export default class ToggleButton extends Component {
                                          color = colorArray[index % colorArray.length]
                                      }
                                      // console.log(index)
-                                     return <Cell strokeWidth={0} fill={color}/>
+                                     return <Cell key={'cell-key-'+index} strokeWidth={0} fill={color}/>
                                  }
                                  )}
                         </Pie>
                     </PieChart>
+                    </div>
                 }
-                <h1 style={{
-                    width:600,
-                    fontWeight:400,
-                    marginBottom:20,
-                    color:'#A7B6C2'
-                }}>Holdings</h1>
+
                 <ReactTable
                     {...{
                         style: {
-                            width: 600
+                            width: 900
                         }
                         ,
                         defaultSorted:[
@@ -183,7 +248,10 @@ export default class ToggleButton extends Component {
                         pivotBy:['stock'],
                         className:'-striped holdings-table',
                         getTrProps:(state, rowInfo)=>{
-                            const rowClassPrefix = rowInfo.row.stock.toLowerCase() === highlightedStock?'tr-highlight ':''
+                            var rowClassPrefix = rowInfo.row.stock.toLowerCase() === highlightedStock?'tr-highlight ':''
+                            if (rowInfo.original && highlightedOrderTime && highlightedOrderTime === rowInfo.original.timestamp){
+                                rowClassPrefix += 'tr-highlight-order '
+                            }
                             return {
                                 className:rowClassPrefix+'rt-tr-level-'+rowInfo.level
                             }

@@ -16,6 +16,10 @@ const botLoggerHostName = 'https://omslogger.azurewebsites.net'
 const gatewayHostName = 'https://omsgateway.azurewebsites.net'
 //const gatewayHostName = 'http://localhost:8080'
 
+function systemMessageExists(lastOrderResponse) {
+    return lastOrderResponse && lastOrderResponse.data && lastOrderResponse.data.lastSystemMessage;
+}
+
 function* pollForOrderUpdates() {
 
     var lastTimestamp = yield select((store) => getLastTimestamp(store))
@@ -36,7 +40,7 @@ function* pollForOrderUpdates() {
     }
     catch(error){
         console.log(error)
-        //TODO:: error handling
+        return
     }
 
     try {
@@ -54,7 +58,7 @@ function* pollForOrderUpdates() {
     }
 
 
-    if (lastOrderResponse.data && lastOrderResponse.data.lastSystemMessage && lastOrderResponse.data.lastSystemMessage.startsWith('OK, order completed!')){
+    if (systemMessageExists(lastOrderResponse) && lastOrderResponse.data.lastSystemMessage.startsWith('OK, order completed')){
         const lastStock = lastOrderResponse.data&&lastOrderResponse.data.lastOrderState?lastOrderResponse.data.lastOrderState.stock:null
         if (lastStock){
             yield call(delay, 4000)
