@@ -37,7 +37,7 @@ const settings = (state = settingsInitialState, action) => {
         case BLOTTER_SELECT:
             return {
                 ...state,
-                blotterEnabled: true
+                blotterEnabled: action.selected
             }
         default:
             return state

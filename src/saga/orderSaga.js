@@ -3,10 +3,12 @@ import {delay} from 'redux-saga'
 import {
     ORDER_COMPLETED_ORDERS_UPDATE,
     ORDER_LAST_EVENT_UPDATE,
+    PUSH_CHANNEL_EVENT,
     completedOrdersUpdate,
-    lastEventUpdate
+    lastEventUpdate,
+    blotterSelect,
+    stickySelect
 } from '../action'
-import {PUSH_CHANNEL_EVENT} from "../action/index";
 import {getLastEvent, getLastTimestamp} from "../redux/order";
 const axios = require('axios')
 const botLoggerHostName = 'https://omslogger.azurewebsites.net'
@@ -17,8 +19,9 @@ const gatewayHostName = 'https://omsgateway.azurewebsites.net'
 function* pollForOrderUpdates() {
 
     var lastTimestamp = yield select((store) => getLastTimestamp(store))
+    var lastOrderResponse
     try {
-        const lastOrderResponse = yield call(
+        lastOrderResponse = yield call(
             axios.get,
             botLoggerHostName+'/order/last',
             {params: {}}
@@ -29,6 +32,7 @@ function* pollForOrderUpdates() {
             return
         }
         yield put(lastEventUpdate(lastOrderResponse.data))
+
     }
     catch(error){
         console.log(error)
@@ -47,6 +51,26 @@ function* pollForOrderUpdates() {
     catch(error){
         console.log(error)
         //TODO:: error handling
+    }
+
+
+    if (lastOrderResponse.data && lastOrderResponse.data.lastSystemMessage && lastOrderResponse.data.lastSystemMessage.startsWith('OK, order completed!')){
+        const lastStock = lastOrderResponse.data&&lastOrderResponse.data.lastOrderState?lastOrderResponse.data.lastOrderState.stock:null
+        if (lastStock){
+            yield call(delay, 4000)
+
+            yield put(stickySelect({
+                lastOrderHighlight:{
+                    stock:lastStock,
+                    timeStamp:'xyz'
+                }
+            }))
+            yield put(blotterSelect(true))
+        }
+    }
+    else {
+        yield put(stickySelect({}))
+        yield put(blotterSelect(false))
     }
 }
 

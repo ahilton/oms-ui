@@ -28,8 +28,11 @@ export default class Footer extends Component {
                 }}>
                     <div style={{
                         color:Colors.LIGHT_GRAY4,
-                        fontWeight: 500,
-                        fontSize: 30
+                        fontWeight: 400,
+                        fontSize: 30,
+                        textAlign:'center',
+                        paddingLeft: 50,
+                        paddingRight: 50,
                     }}
                     >
                         {this.props.children}

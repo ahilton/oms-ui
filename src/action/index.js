@@ -29,7 +29,7 @@ export const webChatToggle = () => {return {type:WEB_CHAT_TOGGLE}}
 
 export const blotterToggle = () => {return {type:BLOTTER_TOGGLE}}
 
-export const blotterSelect = () => {return {type:BLOTTER_SELECT}}
+export const blotterSelect = (selected) => {return {type:BLOTTER_SELECT, selected: selected}}
 
 export const clearLastOrder = () => {return lastEventUpdate(null)}
 
