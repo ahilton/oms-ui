@@ -284,7 +284,7 @@ class App extends Component {
                         stickySelect:stickySelect,
                         completedOrders
                     }}/>
-                    {this.renderToggleButton({left:0, top:0}, 'label', this.toggleView, 'white')}
+                    {this.renderToggleButton({left:0, top:0}, 'document', this.toggleView, 'white')}
                 </div>}
                 {!blotterEnabled && orderPage}
                 {webChatEnabled && this.renderWebchat()}
