@@ -22,7 +22,8 @@ export default class StockChart extends Component {
 
         return (
             <Flex wrap align='center' w={1} p={0} className={''} style={{
-                width:400
+                width:400,
+                marginTop:-40
             }}>
                 <Box w={1/2} p={1} className={''} style={{
                     textAlign:'center',

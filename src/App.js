@@ -346,13 +346,13 @@ class App extends Component {
                     </Tooltip>
                 </div>
             </div></div>}
-            {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
+            {this.renderToggleButton({left:0, top:0}, 'pie-chart', this.toggleView)}
             {this.renderToggleButton({left:0, top:60}, 'small-cross', this.handleClear)}
             {orderComponent}
             {!webChatEnabled && this.renderFooter(lastEvent)}
             {webChatEnabled && this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
         </div>:<div style={this.pageGrowStyle}>
-            {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
+            {this.renderToggleButton({left:0, top:0}, 'pie-chart', this.toggleView)}
             <LaunchPage/>
             {this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
         </div>
@@ -371,7 +371,7 @@ class App extends Component {
                         stickySelect:stickySelect,
                         completedOrders
                     }}/>
-                    {this.renderToggleButton({left:0, top:0}, 'document', this.toggleView, 'white')}
+                    {this.renderToggleButton({left:0, top:0}, 'double-chevron-left', this.toggleView, 'white')}
                 </div>}
                 {!blotterEnabled && orderPage}
                 {webChatEnabled && this.renderWebchat()}
