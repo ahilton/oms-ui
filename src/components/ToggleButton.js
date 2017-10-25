@@ -9,8 +9,8 @@ export default class ToggleButton extends Component {
     render() {
         const {handleClick, iconName, style} = this.props
         return (
-            <a role="button" className=""  style={style} tabIndex="0">
-                <Icon iconName={iconName} iconSize="inherit" onClick={handleClick} style={{fontSize:50}}/>
+            <a role="button" className=""  style={{fontSize:50, ...style}} tabIndex="0">
+                <Icon iconName={iconName} iconSize="inherit" onClick={handleClick} />
             </a>
         )
     }

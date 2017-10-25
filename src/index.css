@@ -135,7 +135,7 @@ html {
 
 .holdings-table.ReactTable .rt-tr.tr-highlight-order.rt-tr-level-1.-odd .pointer:before,
 .holdings-table.ReactTable .rt-tr.tr-highlight-order.rt-tr-level-1 .pointer:before{
-  content: '\E779';
+  content: '\232A';
 }
 
 .holdings-table.ReactTable .rt-tr.tr-highlight-order.rt-tr-level-1.-odd .pointer,

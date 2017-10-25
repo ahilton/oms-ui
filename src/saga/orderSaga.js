@@ -9,12 +9,13 @@ import {
     blotterSelect,
     stickySelect
 } from '../action'
-import {getLastEvent, getLastTimestamp} from "../redux/order";
+import {getLastEvent, getLastTimestamp, getTickData} from "../redux/order";
+import {ENABLE_PRICE_TICK, priceTick} from "../action/index";
 const axios = require('axios')
 const botLoggerHostName = 'https://omslogger.azurewebsites.net'
 // const botLoggerHostName = 'http://localhost:8080'
 const gatewayHostName = 'https://omsgateway.azurewebsites.net'
-//const gatewayHostName = 'http://localhost:8080'
+// const gatewayHostName = 'http://localhost:8080'
 
 function systemMessageExists(lastOrderResponse) {
     return lastOrderResponse && lastOrderResponse.data && lastOrderResponse.data.lastSystemMessage;
@@ -66,7 +67,7 @@ function* pollForOrderUpdates() {
             yield put(stickySelect({
                 lastOrderHighlight:{
                     stock:lastStock,
-                    timeStamp:'xyz'
+                    timeStamp:lastOrderResponse.data.lastOrderState.timestamp
                 }
             }))
             yield put(blotterSelect(true))
@@ -84,7 +85,6 @@ function* orderSagaInit(){
         yield call(pollForOrderUpdates)
         yield call(delay, 1000)
     }
-
 }
 
 function* pushChannelEvent(action){
@@ -109,9 +109,61 @@ function* pushChannelEvent(action){
     }
 }
 
+function* enablePriceTick() {
+    var lastPrice
+    yield call(delay, 4000)
+    //begin polling
+    while(true){
+        var tickData = yield select((store) => getTickData(store))
+        if (!tickData || !tickData.enabled){
+            break
+        }
+
+        lastPrice = yield call(tickPrice, lastPrice)
+        yield call(delay, 2000)
+    }
+}
+
+function* tickPrice(lastPrice){
+    var lastEvent = yield select((store) => getLastEvent(store))
+    if (!lastEvent || !lastEvent.lastOrderState || !lastEvent.lastOrderState.stock){
+        return
+    }
+    const stock = lastEvent.lastOrderState.stock
+    let randomPrice = getSharePrice(stock);
+    let newPrice = lastPrice?(((30*lastPrice)+randomPrice)/31):randomPrice
+    yield put(priceTick(newPrice))
+    return newPrice
+}
+
+function getSharePrice(stock) {
+    var min = 10
+    var max = 24
+    if (stock.toLowerCase()==='ibm'){
+        min = 170
+        max = 210
+    } else if(stock.toLowerCase() ==='microsoft'){
+        min = 80
+        max = 101
+    } else if(stock.toLowerCase() ==='apple') {
+        min = 160
+        max = 190
+    } else if(stock.toLowerCase() ==='sony') {
+        min = 30
+        max = 40
+    }
+
+    return getRandomPrice(min, max);
+}
+
+function getRandomPrice(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function* orderSagaRoot() {
     yield takeLatest('persist/REHYDRATE', orderSagaInit)
     yield takeEvery(PUSH_CHANNEL_EVENT, pushChannelEvent)
+    yield takeLatest(ENABLE_PRICE_TICK, enablePriceTick)
 }
 
 export default orderSagaRoot

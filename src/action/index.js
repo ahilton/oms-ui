@@ -3,6 +3,10 @@ export const ORDER_RESET = 'ORDER_RESET'
 export const ORDER_COMPLETED_ORDERS_UPDATE = 'ORDER_COMPLETED_ORDERS_UPDATE'
 export const ORDER_STICKY_SELECT = 'ORDER_STICKY_SELECT'
 
+export const PRICE_TICK = 'PRICE_TICK'
+export const ENABLE_PRICE_TICK = 'ENABLE_PRICE_TICK'
+export const DISABLE_PRICE_TICK = 'DISABLE_PRICE_TICK'
+
 export const WEB_CHAT_TOGGLE = 'WEB_CHAT_TOGGLE'
 export const BLOTTER_TOGGLE = 'BLOTTER_TOGGLE'
 export const BLOTTER_SELECT = 'BLOTTER_SELECT'
@@ -50,3 +54,14 @@ export const stickySelect = (data) => {
         data:data
     }
 }
+
+export const priceTick = (price) => {
+    return {
+        type:PRICE_TICK,
+        price:price
+    }
+}
+
+export const disablePriceTick = () => {return {type:DISABLE_PRICE_TICK}}
+
+export const enablePriceTick = () => {return {type:ENABLE_PRICE_TICK}}

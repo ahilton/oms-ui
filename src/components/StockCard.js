@@ -43,6 +43,10 @@ export default class StockCard extends Component {
                         fontSize:60,
                     }}>
                         {order && order.qty && order.qty.toLocaleString()}</div>
+                    {order && order.price && <div style={{fontSize:30, fontWeight:200}}><div style={{color:Colors.GRAY4, marginTop:-5, marginBottom:0}}>@</div><div style={{
+                        fontSize:50,
+
+                    }}>{'$'+order.price}</div></div>}
                 </div>
             </Box>
 

@@ -11,7 +11,7 @@ import './App.css';
 
 import {
     getCompletedOrders,
-    getLastEvent, getStickySelect
+    getLastEvent, getStickySelect, getTickData
 } from './redux/order'
 
 import {
@@ -40,6 +40,8 @@ import Blotter from "./components/Blotter";
 import LoadingB from "./components/LoadingB";
 import LaunchPage from "./components/LaunchPage";
 import StockCardButton from "./components/StockCardButton";
+import StockChart from "./components/StockChart";
+import {disablePriceTick, enablePriceTick} from "./action/index";
 
 class App extends Component {
 
@@ -123,7 +125,7 @@ class App extends Component {
         return defaultColors
     }
 
-    renderOrderComponent = (showBuySell, showConfirm, order, stickySelect) => {
+    renderOrderComponent = (showBuySell, showConfirm, order, stickySelect, tickData) => {
         const stockDetails = order&&order.stock?this.getDetailsForStock(order.stock):{
             code: '',
             name: ''
@@ -150,8 +152,7 @@ class App extends Component {
                 }]
             }}/>
         }
-
-        if (showConfirm){
+        else if (showConfirm){
             const selectedBuySell = stickySelect&&stickySelect.confirm?stickySelect.confirm:null
             let sellClassName,buyClassName,buySellClassName
             if (selectedBuySell){
@@ -169,6 +170,17 @@ class App extends Component {
                     value:'cancel', class:'cancel-choice '+sellClassName
                 }]
             }}/>
+        }
+        else {
+            const showMktData = tickData && tickData.enabled
+            subComponent = <div style={{
+                marginTop:20,
+                textAlign:'right'
+            }}>
+                <ToggleButton {...{style:{color:'black', opacity:0.2, fontSize:40}, iconName:showMktData?'cross':'chart', handleClick:this.togglePriceTick}}/>
+                {showMktData &&
+                    <StockChart {...{stockDetails:stockDetails, tickData:tickData}}/>}
+            </div>
         }
 
         return <div style={{
@@ -251,6 +263,12 @@ class App extends Component {
         this.props.dispatch(webChatToggle())
     }
 
+    togglePriceTick = () => {
+        const tickData = this.props.tickData
+        const action = tickData&&tickData.enabled?disablePriceTick():enablePriceTick()
+        this.props.dispatch(action)
+    }
+
     toggleView = () => {
         this.props.dispatch(blotterToggle())
     }
@@ -267,7 +285,7 @@ class App extends Component {
     }
 
     render() {
-        const {lastEvent, completedOrders, webChatEnabled, blotterEnabled, stickySelect} = this.props
+        const {lastEvent, completedOrders, webChatEnabled, blotterEnabled, stickySelect, tickData} = this.props
         const orderPageEnabled = lastEvent?true:false
         const order = lastEvent?lastEvent.lastOrderState:{}
 
@@ -276,7 +294,7 @@ class App extends Component {
         const showConfirm = pushEvents&&lastEvent&&lastEvent.lastSystemMessage&&lastEvent.lastSystemMessage.startsWith("Confirm you would like to place a ")
 
         const orderComponent = (order && order.stock)?
-            this.renderOrderComponent(showBuySell, showConfirm, order, stickySelect):
+            this.renderOrderComponent(showBuySell, showConfirm, order, stickySelect, tickData):
             this.renderStockSelection(pushEvents, lastEvent, stickySelect)
 
         const orderPage = lastEvent?<div style={this.pageGrowStyle}>
@@ -322,7 +340,8 @@ function mapStateToProps(state) {
         stickySelect:getStickySelect(state),
         blotterEnabled: blotterEnabled(state),
         webChatEnabled: webChatEnabled(state),
-        channelKeys: channelKeys(state)
+        channelKeys: channelKeys(state),
+        tickData: getTickData(state)
     }
 }
 
