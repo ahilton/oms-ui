@@ -47,6 +47,7 @@ export default class StockCard extends Component {
             </Box>
 
         return (
+            <div>
             <div className={'pt-card '+ cardClassName} style={containerStyle} {...cardProps}>
                 <Flex wrap align='left' w={1} p={0}>
                     <Box  w={1/3} p={1}>
@@ -73,7 +74,11 @@ export default class StockCard extends Component {
 
                     {contentComponent}
                 </Flex>
-                {footer && footer}
+
+            </div>
+                {footer && <div style={{
+                    marginTop:0
+                }}>{footer}</div>}
             </div>
         )
     }

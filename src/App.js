@@ -39,6 +39,7 @@ import FloatingToggleButton from "./components/FloatingToggleButton";
 import Blotter from "./components/Blotter";
 import LoadingB from "./components/LoadingB";
 import LaunchPage from "./components/LaunchPage";
+import StockCardButton from "./components/StockCardButton";
 
 class App extends Component {
 
@@ -122,7 +123,7 @@ class App extends Component {
         return defaultColors
     }
 
-    renderOrderComponent = (showBuySell, order, stickySelect) => {
+    renderOrderComponent = (showBuySell, showConfirm, order, stickySelect) => {
         const stockDetails = order&&order.stock?this.getDetailsForStock(order.stock):{
             code: '',
             name: ''
@@ -138,21 +139,36 @@ class App extends Component {
                 buyClassName = selectedBuySell==='sell'?'deselected':''
                 buySellClassName = 'selection-made'
             }
-            subComponent = <div>
-                <Flex wrap align='center' w={1} p={0} className={'buy-sell-choice '+buySellClassName} style={{
-                    textAlign:'center',
-                    fontSize: 40,
-                    fontVariant: 'small-caps'
-                }}>
-                    <Box  w={1/2} p={1} className={'buy-choice '+buyClassName} onClick={()=>this.handleBSSelect('buy', this.props.lastEvent)}>
-                        buy
-                    </Box>
-                    <Box  w={1/2} p={1} className={'sell-choice '+sellClassName} onClick={()=>this.handleBSSelect('sell', this.props.lastEvent)}>
-                        sell
-                    </Box>
-                </Flex>
-            </div>
+            subComponent = <StockCardButton {...{
+                lastEvent:this.props.lastEvent,
+                handleEvent:this.handleBSSelect,
+                className: 'buy-sell-choice '+buySellClassName,
+                buttons: [{
+                    value:'buy', class:'buy-choice '+buyClassName
+                },{
+                    value:'sell', class:'sell-choice '+sellClassName
+                }]
+            }}/>
+        }
 
+        if (showConfirm){
+            const selectedBuySell = stickySelect&&stickySelect.confirm?stickySelect.confirm:null
+            let sellClassName,buyClassName,buySellClassName
+            if (selectedBuySell){
+                sellClassName = selectedBuySell==='ok'?'deselected':''
+                buyClassName = selectedBuySell==='cancel'?'deselected':''
+                buySellClassName = 'selection-made'
+            }
+            subComponent = <StockCardButton {...{
+                lastEvent:this.props.lastEvent,
+                handleEvent:this.handleConfirmSelect,
+                className: 'confirm-choice '+buySellClassName,
+                buttons: [{
+                    value:'ok', class:'ok-choice '+buyClassName
+                },{
+                    value:'cancel', class:'cancel-choice '+sellClassName
+                }]
+            }}/>
         }
 
         return <div style={{
@@ -178,6 +194,10 @@ class App extends Component {
 
     handleBSSelect = (bs, lastEvent) => {
         this.handlepushChannelEvent(bs, lastEvent, {buysell:bs})
+    }
+
+    handleConfirmSelect = (confirm, lastEvent) => {
+        this.handlepushChannelEvent(confirm, lastEvent, {confirm:confirm})
     }
 
     handlepushChannelEvent = (msg, lastEvent, ss) => {
@@ -253,9 +273,10 @@ class App extends Component {
 
         const pushEvents = lastEvent&&(lastEvent.channel==='webchat'||lastEvent.channel==='directline')
         const showBuySell = pushEvents&&lastEvent&&lastEvent.lastSystemMessage&&lastEvent.lastSystemMessage.startsWith("Would you like to buy or sell")
+        const showConfirm = pushEvents&&lastEvent&&lastEvent.lastSystemMessage&&lastEvent.lastSystemMessage.startsWith("Confirm you would like to place a ")
 
         const orderComponent = (order && order.stock)?
-            this.renderOrderComponent(showBuySell, order, stickySelect):
+            this.renderOrderComponent(showBuySell, showConfirm, order, stickySelect):
             this.renderStockSelection(pushEvents, lastEvent, stickySelect)
 
         const orderPage = lastEvent?<div style={this.pageGrowStyle}>

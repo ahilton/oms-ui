@@ -62,6 +62,37 @@ html {
 }
 
 
+/*
+  BUY SELL CHOICE
+*/
+.confirm-choice{
+  color:white
+}
+.confirm-choice:hover{
+  cursor: pointer;
+}
+.confirm-choice._Rfx6_, .confirm-choice._Rfx6_{
+  padding:5px;
+  padding-bottom: 10px;
+}
+.ok-choice{
+  background-color: #2B95D6;
+}
+.cancel-choice{
+  background-color: #293742;
+}
+.ok-choice:hover, .selection-made .ok-choice{
+  background-color: #2882bb;
+}
+.cancel-choice:hover, .selection-made .cancel-choice{
+  background-color: #1b252e;
+}
+.deselected.ok-choice, .deselected.ok-choice:hover,
+.deselected.cancel-choice, .deselected.cancel-choice:hover{
+  background-color: #bbbbbb;
+}
+
+
 /**
   TABLE CSS
  */
@@ -160,6 +191,9 @@ html {
   border-right: 1px solid rgba(255,255,255,0.10);
 }
 
+.dollar-sign{
+  padding-right: 4px;
+}
 .rt-tr.rt-tr-level-0 .dollar-sign{
   color:#137CBD
 }

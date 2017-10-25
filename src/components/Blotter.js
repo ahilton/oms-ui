@@ -85,7 +85,7 @@ export default class ToggleButton extends Component {
         })
 
         const renderStockLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-            if (percent < 0.5){
+            if (percent < 0.05){
                 return ''
             }
             return data[index].name+': '+data[index].value.toLocaleString()
