@@ -42,6 +42,12 @@ import LaunchPage from "./components/LaunchPage";
 import StockCardButton from "./components/StockCardButton";
 import StockChart from "./components/StockChart";
 import {disablePriceTick, enablePriceTick} from "./action/index";
+import {Tooltip, Position} from "@blueprintjs/core";
+
+var ghome = require('./img/ghome.png')
+var skype = require('./img/skype.png')
+var cortana = require('./img/cortana.png')
+var msChannel = require('./img/ms-channel.png')
 
 class App extends Component {
 
@@ -177,7 +183,7 @@ class App extends Component {
                 marginTop:20,
                 textAlign:'right'
             }}>
-                <ToggleButton {...{style:{color:'black', opacity:0.2, fontSize:40}, iconName:showMktData?'cross':'chart', handleClick:this.togglePriceTick}}/>
+                <ToggleButton {...{style:{color:'black', opacity:0.2, fontSize:50}, iconName:showMktData?'cross':'chart', handleClick:this.togglePriceTick}}/>
                 {showMktData &&
                     <StockChart {...{stockDetails:stockDetails, tickData:tickData}}/>}
             </div>
@@ -297,7 +303,49 @@ class App extends Component {
             this.renderOrderComponent(showBuySell, showConfirm, order, stickySelect, tickData):
             this.renderStockSelection(pushEvents, lastEvent, stickySelect)
 
+        var channelIcon = msChannel
+        if (lastEvent && lastEvent.channel){
+            switch(lastEvent.channel){
+                case 'skype':
+                    channelIcon=skype
+                    break;
+                case 'cortana':
+                    channelIcon=cortana
+                    break;
+                case 'directline':
+                    channelIcon=ghome
+                    break;
+            }
+        }
+
         const orderPage = lastEvent?<div style={this.pageGrowStyle}>
+            {(channelIcon || lastEvent.lastUserMessage) && <div style={{width:'100%', textAlign:'right'}}><div style={{
+                float:'right'
+            }}>
+                <div style={{width:120,height:120,position:'absolute',marginLeft:-120,
+                    display:'flex',
+                    flexDirection:'column',
+                    alignItems:'center', // vertical
+                    justifyContent: 'center', //horizontal
+                    flex:1,
+                    //backgroundColor:'red',
+                    textAlign:'center'}}>
+                    <Tooltip content={<div style={{
+                        display:'flex',
+                        flexDirection:'column',
+                        alignItems:'center', // vertical
+                        justifyContent: 'center', //horizontal
+                        flex:1,
+                        //backgroundColor:'red',
+                        textAlign:'center'}}>
+                        <img src={channelIcon} width={70} height={70} alt={lastEvent.lastUserMessage}/>
+                        <div style={{fontSize:30, fontWeight:200, margin:20}}>{lastEvent.lastUserMessage}</div>
+                        <div style={{fontSize:15, color:Colors.GRAY3}}>{new Date(lastEvent.timestamp).toLocaleString()}</div>
+                    </div>} position={Position.BOTTOM}>
+                        <ToggleButton {...{style:{opacity:0.2, color:'black'}, iconName:'cell-tower'}}/>
+                    </Tooltip>
+                </div>
+            </div></div>}
             {this.renderToggleButton({left:0, top:0}, 'dashboard', this.toggleView)}
             {this.renderToggleButton({left:0, top:60}, 'small-cross', this.handleClear)}
             {orderComponent}
@@ -316,7 +364,7 @@ class App extends Component {
                 flexDirection:'row',
                 height:'100%'
             }}>
-                {stickySelect && Object.keys(stickySelect).length > 0 && <LoadingB />}
+                {stickySelect && Object.keys(stickySelect).length > 0 && !blotterEnabled && <LoadingB />}
                 {blotterEnabled && <div style={this.pageGrowStyle}>
                     <Blotter {...{
                         stockDetails:this.stockDetails,

@@ -55,7 +55,8 @@ export default class StockChart extends Component {
                 </Box>
                 <Box w={1} p={1} className={''} style={{
                     textAlign:'center',
-                    color:Colors.GRAY3
+                    //color:Colors.GRAY3,
+                    opacity:0.4
                 }} >
                     <div style={{
                         fontSize:20,
