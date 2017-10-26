@@ -183,9 +183,9 @@ export default class ToggleButton extends Component {
                         //borderTopLeftRadius:25,
                         //borderTopRightRadius:25,
                         //border:'10 solid red',
-                        borderColor:'#394B59',
-                        borderWidth:2,
-                        borderStyle:'dashed',
+                        //borderColor:'#394B59',
+                        //borderWidth:2,
+                        //borderStyle:'dashed',
                         borderBottomWidth:0
                         //marginTop:-150,
                         //marginBottom:-50,
@@ -201,7 +201,7 @@ export default class ToggleButton extends Component {
                             cy: '50%',
                             labelLine: false,
                             //label: renderCustomizedLabel,
-                            outerRadius: 60,
+                            outerRadius: 70,
                             //fill: '#000000',
                             //style:{backgroundColor:'red'},
                             label:renderStockLabel

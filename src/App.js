@@ -341,13 +341,13 @@ class App extends Component {
                         <img src={channelIcon} width={70} height={70} alt={lastEvent.lastUserMessage}/>
                         <div style={{fontSize:30, fontWeight:200, margin:20}}>{lastEvent.lastUserMessage}</div>
                         <div style={{fontSize:15, color:Colors.GRAY3}}>{new Date(lastEvent.timestamp).toLocaleString()}</div>
-                    </div>} position={Position.BOTTOM}>
+                    </div>} position={Position.BOTTOM_RIGHT}>
                         <ToggleButton {...{style:{opacity:0.2, color:'black'}, iconName:'cell-tower'}}/>
                     </Tooltip>
                 </div>
             </div></div>}
             {this.renderToggleButton({left:0, top:0}, 'pie-chart', this.toggleView)}
-            {this.renderToggleButton({left:0, top:60}, 'small-cross', this.handleClear)}
+            {this.renderToggleButton({left:0, top:70}, 'small-cross', this.handleClear)}
             {orderComponent}
             {!webChatEnabled && this.renderFooter(lastEvent)}
             {webChatEnabled && this.renderToggleButton({left:0, bottom:0}, 'chat', this.toggleWebChat)}
@@ -364,7 +364,7 @@ class App extends Component {
                 flexDirection:'row',
                 height:'100%'
             }}>
-                {stickySelect && Object.keys(stickySelect).length > 0 && !blotterEnabled && <LoadingB />}
+                {stickySelect && Object.keys(stickySelect).length > 0 && !stickySelect.lastOrderHighlight && !blotterEnabled && <LoadingB />}
                 {blotterEnabled && <div style={this.pageGrowStyle}>
                     <Blotter {...{
                         stockDetails:this.stockDetails,

@@ -32,11 +32,21 @@ function* pollForOrderUpdates() {
             {params: {}}
         )
         //console.log(lastOrderResponse)
-        if (lastOrderResponse.data && lastTimestamp && (!lastOrderResponse.data.timestamp || lastOrderResponse.data.timestamp===lastTimestamp)){
+        const responseData = lastOrderResponse.data
+        if (responseData && lastTimestamp && (!responseData.timestamp || responseData.timestamp===lastTimestamp)){
             // Continue with updates only when the timestamp of the last event changes to avoid flickering effects
             return
         }
-        yield put(lastEventUpdate(lastOrderResponse.data))
+        yield put(lastEventUpdate(responseData))
+        if (responseData && responseData.lastSystemMessage && responseData.lastSystemMessage.startsWith('Ok, you have')){
+            yield put(stickySelect({
+                lastOrderHighlight:{
+                    stock:responseData.lastOrderState?responseData.lastOrderState.stock:null
+                }
+            }))
+            yield put(blotterSelect(true))
+            return
+        }
 
     }
     catch(error){
