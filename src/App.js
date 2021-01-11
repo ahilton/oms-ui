@@ -29,8 +29,6 @@ import {
 
 import { Colors, Icon } from "@blueprintjs/core";
 
-import {Box, Flex} from "reflexbox";
-
 import StockCard from "./components/StockCard";
 import Footer from "./components/Footer";
 import StockSelection from "./components/StockSelection";
